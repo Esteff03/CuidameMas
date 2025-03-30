@@ -4,7 +4,7 @@ plugins {
 
 android {
     namespace 'com.synunezcamacho.cuidame'
-    compileSdk 34
+    compileSdk 35
 
     defaultConfig {
         applicationId "com.synunezcamacho.cuidame"
