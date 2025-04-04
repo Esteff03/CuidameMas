@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">Cuidame+</string>
+    <string name="tituloPerfil">Tipo de perfil</string>
+    <string name="tituloRegistrarse">Registrate</string>
+    <string name="soyCuidador">Soy cuidador</string>
+    <string name="buscoCuidador">Busco Cuidador</string>
+    <string name="registro">Registrarse</string>
+    <string name="nombre">Nombre</string>
+    <string name="apellido">Apellido</string>
+    <string name="email">Correo Electronico</string>
+    <string name="password">Contraseña</string>
+    <string name="direccion">Direccion</string>
+    <string name="telefono">Telefono</string>
+    <string name="continua">Continuar</string>
 </resources>
