@@ -1,1 +1,4 @@
-Aplicación desarrollada en Android Studio como proyecto final del ciclo formativo Desarrollo de multiplataforma. 
+Aplicación proyecto final del ciclo formativo en Desarrollo de aplicaciones multiplataforma.
+
+Desarrollado en Android Studio. 
+
