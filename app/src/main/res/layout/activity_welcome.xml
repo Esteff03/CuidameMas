@@ -12,9 +12,9 @@
         android:id="@+id/textView"
         android:layout_width="313dp"
         android:layout_height="82dp"
-        android:text="BIENVENIDO"
+        android:text="@string/bienvenido"
         android:textColor="@color/cianClaro"
-        android:textSize="40dp"
+        android:textSize="40sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -31,6 +31,9 @@
         android:layout_marginTop="576dp"
         app:layout_constraintTop_toTopOf="@+id/textView"
         app:srcCompat="@drawable/vector_1"
+        android:contentDescription="Imagen decorativa"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         tools:layout_editor_absoluteX="0dp" />
 
     <Button
@@ -39,9 +42,10 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         android:backgroundTint="@color/blanco"
-        android:text="Iniciar Sesión"
+        android:text="@string/iniciarSesion"
         android:textColor="@color/negro"
         android:textColorLink="@color/blanco"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         tools:layout_editor_absoluteX="250dp" />
 
@@ -51,7 +55,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         android:backgroundTint="@color/blanco"
-        android:text="Registrase"
+        android:text="@string/registro"
         android:textColor="@color/negro"
         android:textColorLink="#FDFFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"

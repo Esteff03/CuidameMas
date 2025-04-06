@@ -2,7 +2,7 @@ package com.synunezcamacho.cuidame;
 
 import android.content.Intent;
 import android.os.Bundle;
-
+import androidx.core.content.ContextCompat;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -15,8 +15,8 @@ import jp.wasabeef.glide.transformations.BlurTransformation;
 
 
 public class TipoDeRegistro extends AppCompatActivity {
-    private ImageView fondo;
-    private Button botonCuidador, botonBuscoCuidador, botonRegistro;
+
+    private Button botonCuidador, botonBuscoCuidador;
     private String perfilSeleccionado = "";
 
     @Override
@@ -25,11 +25,11 @@ public class TipoDeRegistro extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_tipo_de_registro);
 
-        fondo = findViewById(R.id.fondoImagen);
+        ImageView fondo = findViewById(R.id.fondoImagen);
 
         botonCuidador = findViewById(R.id.botonCuidador);
         botonBuscoCuidador = findViewById(R.id.botonBuscoCuidador);
-        botonRegistro = findViewById(R.id.botonRegistro);
+        Button botonRegistro = findViewById(R.id.botonRegistro);
 
         //Uso del Glide para aplicar el desenfoque
         Glide.with(this)
@@ -72,16 +72,20 @@ public class TipoDeRegistro extends AppCompatActivity {
         actualizarColoresBotones();
     }
     private void actualizarColoresBotones() {
-        if ("soyCuidador".equals(perfilSeleccionado)) {
-            botonCuidador.setBackgroundColor(getResources().getColor(R.color.principal));
-            botonBuscoCuidador.setBackgroundColor(getResources().getColor(R.color.crema));
-        } else if ("buscarCuidador".equals(perfilSeleccionado)) {
-            botonBuscoCuidador.setBackgroundColor(getResources().getColor(R.color.principal));
-            botonCuidador.setBackgroundColor(getResources().getColor(R.color.crema));
-        } else {
+        int colorPrincipal = ContextCompat.getColor(this, R.color.principal);
+        int colorCrema = ContextCompat.getColor(this, R.color.crema);
 
-            botonCuidador.setBackgroundColor(getResources().getColor(R.color.crema));
-            botonBuscoCuidador.setBackgroundColor(getResources().getColor(R.color.crema));
+        if ("soyCuidador".equals(perfilSeleccionado)) {
+                botonCuidador.setBackgroundColor(colorPrincipal);
+                botonBuscoCuidador.setBackgroundColor(colorCrema);
+        } else if ("buscarCuidador".equals(perfilSeleccionado)) {
+                botonBuscoCuidador.setBackgroundColor(colorPrincipal);
+                botonCuidador.setBackgroundColor(colorCrema);
+        } else {
+                botonCuidador.setBackgroundColor(colorCrema);
+                botonBuscoCuidador.setBackgroundColor(colorCrema);
         }
+
+
     }
 }

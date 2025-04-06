@@ -14,35 +14,35 @@ import jp.wasabeef.glide.transformations.BlurTransformation;
 
 
 public class Registro extends AppCompatActivity {
-    private ImageView fondo;
-    private String perfilSeleccionado;
-    private EditText edtNombre, edtApellido,edtEmail, edtPassword, edtDireccion, edtTelefono;
-    private Button btnContinuar;
+
+
+    EditText edtNombre, edtApellido,edtEmail, edtPassword, edtDireccion, edtTelefono;
+    Button btnContinuar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registro);
 
-        fondo = findViewById(R.id.fondoImagen);
+        ImageView fondo = findViewById(R.id.fondoImagen);
 
         edtNombre = findViewById(R.id.nombre);
         edtApellido = findViewById(R.id.apellido);
         edtEmail = findViewById(R.id.email);
-        edtPassword = findViewById(R.id.contraseña);
+        edtPassword = findViewById(R.id.password);
         edtDireccion = findViewById(R.id.direccion);
         edtTelefono = findViewById(R.id.telefono);
         btnContinuar = findViewById(R.id.botonContinuar);
 
         //Obtener el perfil desde el Intent
-        perfilSeleccionado = getIntent().getStringExtra("perfil");
+        String perfilSeleccionado = getIntent().getStringExtra("perfil");
 
         //Uso del Glide para aplicar el desenfoque
         Glide.with(this)
                 .load(R.drawable.fondo)
                 .transform(new BlurTransformation(25))
                 .into(fondo);
-
+/*
         // Aquí  personalizar el formulario dependiendo del tipo de perfil
         if ("soyCuidador".equals(perfilSeleccionado)) {
 
@@ -50,6 +50,8 @@ public class Registro extends AppCompatActivity {
         } else if ("buscarCuidador".equals(perfilSeleccionado)) {
 
         }
+
+ */
     }
     public void registrarUsuario(View view) {
 
@@ -70,8 +72,6 @@ public class Registro extends AppCompatActivity {
             if (!valida(email)) {
                 verificarCampo(edtEmail, findViewById(R.id.asteriscoEmail), findViewById(R.id.invisibleCorreo));
                 Toast.makeText(this, "Correo no válido", Toast.LENGTH_SHORT).show();
-
-            }else{
 
             }
 
