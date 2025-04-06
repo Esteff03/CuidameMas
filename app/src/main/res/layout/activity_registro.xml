@@ -49,6 +49,15 @@
             android:textColor="@android:color/holo_red_dark"
             android:visibility="gone" />
 
+        <TextView
+            android:id="@+id/invisibleNombre"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/nombre"
+            android:layout_marginLeft="40dp"
+            android:visibility="gone"
+            />
+
         <EditText
             android:id="@+id/nombre"
             android:layout_width="185dp"
@@ -71,6 +80,14 @@
             android:text="*"
             android:textColor="@android:color/holo_red_dark"
             android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/invisibleApellido"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/apellido"
+            android:layout_marginLeft="40dp"
+            android:visibility="gone"/>
 
         <EditText
             android:id="@+id/apellido"
@@ -95,6 +112,13 @@
             android:textColor="@android:color/holo_red_dark"
             android:visibility="gone" />
 
+        <TextView
+            android:id="@+id/invisibleCorreo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/email"
+            android:visibility="gone"/>
+
         <EditText
             android:id="@+id/email"
             android:layout_width="match_parent"
@@ -116,6 +140,14 @@
             android:text="*"
             android:textColor="@android:color/holo_red_dark"
             android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/invisiblePassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/password"
+            android:visibility="gone"
+            />
 
         <EditText
             android:id="@+id/contraseña"
@@ -139,6 +171,13 @@
             android:textColor="@android:color/holo_red_dark"
             android:visibility="gone" />
 
+        <TextView
+            android:id="@+id/invisibleDireccion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/direccion"
+            android:visibility="gone"/>
+
         <EditText
             android:id="@+id/direccion"
             android:layout_width="match_parent"
@@ -160,6 +199,13 @@
             android:text="*"
             android:textColor="@android:color/holo_red_dark"
             android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/invisibleTelefono"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/telefono"
+            android:visibility="gone"/>
 
         <EditText
             android:id="@+id/telefono"

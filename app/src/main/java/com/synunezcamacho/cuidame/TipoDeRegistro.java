@@ -8,6 +8,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
+
 import com.bumptech.glide.Glide;
 import jp.wasabeef.glide.transformations.BlurTransformation;
 
@@ -63,6 +65,7 @@ public class TipoDeRegistro extends AppCompatActivity {
 
             } else {
                 // Mostrar mensaje o advertencia si no se ha seleccionado un perfil
+                Toast.makeText(this, "No has Seleccionado un Perfil", Toast.LENGTH_SHORT).show();
             }
 
         });

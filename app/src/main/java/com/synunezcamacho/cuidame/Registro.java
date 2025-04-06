@@ -51,7 +51,6 @@ public class Registro extends AppCompatActivity {
 
         }
     }
-
     public void registrarUsuario(View view) {
 
         // OBTENGO LOS VALORES
@@ -62,30 +61,33 @@ public class Registro extends AppCompatActivity {
         String direccion = edtDireccion.getText().toString();
         String telefono = edtTelefono.getText().toString();
 
+        boolean todosDatos = !nombre.isEmpty() && !apellido.isEmpty() && !email.isEmpty() && !password.isEmpty() &&
+                !direccion.isEmpty() && !telefono.isEmpty();
+
         // COMPRUEBO SI NO ESTAN VACIOS
-        if (!nombre.isEmpty() && !apellido.isEmpty() && !email.isEmpty() && !password.isEmpty() && !direccion.isEmpty() && !telefono.isEmpty()) {
-            if (valida(email)) {
-               /*
-                if (password.equals(password)) {
-                        //Falta modificar las contraseñas
-                }*/
-            }else {
+        if (todosDatos) {
+
+            if (!valida(email)) {
+                verificarCampo(edtEmail, findViewById(R.id.asteriscoEmail), findViewById(R.id.invisibleCorreo));
                 Toast.makeText(this, "Correo no válido", Toast.LENGTH_SHORT).show();
-                verificarCampo(edtEmail, findViewById(R.id.asteriscoEmail));
+
+            }else{
+
             }
 
         } else {
             // Comprobamos los campos vacíos
-            verificarCampo(edtNombre, findViewById(R.id.asteriscoNombre));
-            verificarCampo(edtApellido, findViewById(R.id.asteriscoApellido));
-            verificarCampo(edtEmail, findViewById(R.id.asteriscoEmail));
-            verificarCampo(edtDireccion, findViewById(R.id.asteriscoDireccion));
-            verificarCampo(edtTelefono, findViewById(R.id.asteriscoTelefono));
-            verificarCampo(edtPassword, findViewById(R.id.asteriscoPassword));
+            verificarCampo(edtNombre, findViewById(R.id.asteriscoNombre), findViewById(R.id.invisibleNombre));
+            verificarCampo(edtApellido, findViewById(R.id.asteriscoApellido), findViewById(R.id.invisibleApellido));
+            verificarCampo(edtEmail, findViewById(R.id.asteriscoEmail), findViewById(R.id.invisibleCorreo));
+            verificarCampo(edtDireccion, findViewById(R.id.asteriscoDireccion), findViewById(R.id.invisibleDireccion));
+            verificarCampo(edtTelefono, findViewById(R.id.asteriscoTelefono), findViewById(R.id.invisibleTelefono));
+            verificarCampo(edtPassword, findViewById(R.id.asteriscoPassword), findViewById(R.id.invisiblePassword));
 
         }
 
     }
+
     private boolean valida(String mail) {
         String[] dominiosPermitidos = {"@gmail.com", "@hotmail.com", "@outlook.com", "@icloud.com", "@educa.madrid.org"};
 
@@ -97,11 +99,16 @@ public class Registro extends AppCompatActivity {
         return false;
     }
     // Metodo para gestionar la visibilidad del asterisco
-    private void verificarCampo(EditText editText, TextView asterisco) {
-        if (editText.getText().toString().isEmpty()) {
+    private void verificarCampo(EditText editText, TextView asterisco, TextView label) {
+        String texto =editText.getText().toString().trim();
+
+        if (texto.isEmpty()) {
             asterisco.setVisibility(View.VISIBLE);
+            label.setVisibility(View.GONE);
+
         } else {
             asterisco.setVisibility(View.GONE);
+            label.setVisibility(View.VISIBLE);
         }
     }
 
