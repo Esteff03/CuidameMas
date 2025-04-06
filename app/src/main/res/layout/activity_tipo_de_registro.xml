@@ -41,7 +41,7 @@
             android:id="@+id/botonCuidador"
             app:icon="@drawable/cuidador"
             app:iconGravity="textEnd"
-            app:iconTint="@color/black"
+            app:iconTint="@color/negro"
             app:iconPadding="58dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -50,13 +50,12 @@
             android:text="@string/soyCuidador"
             android:textColor="@android:color/black"
             android:backgroundTint="@color/crema"
-
             />
         <com.google.android.material.button.MaterialButton
             android:id="@+id/botonBuscoCuidador"
             app:icon="@drawable/buscador"
             app:iconGravity="textEnd"
-            app:iconTint="@color/black"
+            app:iconTint="@color/negro"
             app:iconPadding="50dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -65,7 +64,6 @@
             android:text="@string/buscoCuidador"
             android:textColor="@android:color/black"
             android:backgroundTint="@color/crema"
-
             />
 
         <Button
@@ -75,7 +73,8 @@
             android:layout_marginTop="16dp"
             android:backgroundTint="@color/principal"
             android:text="@string/registro"
-            android:textColor="@android:color/white" />
+            android:textColor="@android:color/white"
+            />
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
