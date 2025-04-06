@@ -35,7 +35,7 @@ public class Registro extends AppCompatActivity {
         btnContinuar = findViewById(R.id.botonContinuar);
 
         //Obtener el perfil desde el Intent
-        String perfilSeleccionado = getIntent().getStringExtra("perfil");
+       // String perfilSeleccionado = getIntent().getStringExtra("perfil");
 
         //Uso del Glide para aplicar el desenfoque
         Glide.with(this)
