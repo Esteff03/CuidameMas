@@ -7,6 +7,19 @@
     android:layout_height="match_parent"
     tools:context=".Welcome"
     android:background="@drawable/imagen">
+    <!-- Imagen de fondo -->
+    <ImageView
+        android:id="@+id/fondo"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:adjustViewBounds="true"
+        android:contentDescription="fondo"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription" />
 
     <TextView
         android:id="@+id/textView"
@@ -25,37 +38,42 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="496dp"
+        android:layout_width="413dp"
+        android:layout_height="310dp"
+        android:layout_marginTop="400dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/textView"
-        app:srcCompat="@drawable/vector_1"
-        tools:layout_editor_absoluteX="0dp" />
+        app:srcCompat="@drawable/vector_1" />
 
     <Button
         android:id="@+id/btnIniciarSesion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
         android:backgroundTint="@color/blanco"
         android:text="Iniciar Sesión"
         android:textColor="@color/negro"
         android:textColorLink="@color/blanco"
         app:layout_constraintBottom_toBottomOf="parent"
-        tools:layout_editor_absoluteX="250dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.976" />
 
     <Button
         android:id="@+id/btnRegistrarse"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
         android:backgroundTint="@color/blanco"
         android:text="Registrase"
         android:textColor="@color/negro"
         android:textColorLink="#FDFFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/btnIniciarSesion"
-        app:layout_constraintHorizontal_bias="0.275"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="0.18"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.976" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
