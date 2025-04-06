@@ -8,6 +8,7 @@
     android:background="@drawable/imagen"
     tools:context=".Login">
 
+    <!-- Guidelines para márgenes laterales -->
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline1"
         android:layout_width="wrap_content"
@@ -20,53 +21,85 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.9" />
+        app:layout_constraintGuide_percent="0.95" />
+
+    <!-- Imagen de fondo -->
+    <ImageView
+        android:id="@+id/fondo"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:adjustViewBounds="true"
+        android:contentDescription="fondo"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription" />
+
+    <!-- Texto Email -->
+
+    <!-- Input Email -->
+
+    <!-- Texto Contraseña -->
+
+    <!-- Input Contraseña -->
+
+    <!-- Campo vacío (si quieres lo puedes eliminar si no lo usas) -->
 
     <TextView
         android:id="@+id/Email"
         android:layout_width="0dp"
-        android:layout_height="35dp"
-        android:text="@string/emailTitulo"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="344dp"
+        android:text="Email"
         android:textColor="@color/blanco"
-        android:textColorHint="#E4FFFFFF"
-        android:textColorLink="#F0FFFFFF"
         android:textSize="32sp"
-        app:layout_constraintBottom_toTopOf="@+id/email"
-        app:layout_constraintEnd_toStartOf="@+id/guideline2"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/guideline2"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/guideline1"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.995" />
+        app:layout_constraintTop_toTopOf="parent" />
+
 
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/email"
-        android:layout_width="331dp"
+        android:layout_width="0dp"
         android:layout_height="51dp"
+        android:layout_marginTop="4dp"
         android:alpha="0.9"
         android:background="@drawable/rounded_edittext"
-        app:layout_constraintBottom_toTopOf="@+id/contraseña"
-        app:layout_constraintStart_toStartOf="@+id/guideline1" />
+        android:contentDescription="@null"
+        android:importantForAccessibility="no"
+        app:layout_constraintEnd_toEndOf="@+id/guideline2"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/guideline1"
+        app:layout_constraintTop_toBottomOf="@id/Email" />
 
     <TextView
         android:id="@+id/contraseña"
         android:layout_width="0dp"
-        android:layout_height="42dp"
-        android:layout_marginEnd="80dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="52dp"
         android:text="@string/password"
         android:textColor="@color/blanco"
         android:textSize="32sp"
-        app:layout_constraintBottom_toTopOf="@+id/password"
-        app:layout_constraintEnd_toStartOf="@+id/guideline2"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/guideline2"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/guideline1" />
+        app:layout_constraintStart_toStartOf="@+id/guideline1"
+        app:layout_constraintTop_toBottomOf="@id/email" />
+
 
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/password"
-        android:layout_width="331dp"
+        android:layout_width="0dp"
         android:layout_height="51dp"
-        android:layout_marginBottom="156dp"
+        android:layout_marginTop="8dp"
         android:background="@drawable/rounded_edittext"
         android:backgroundTint="#F7FFFFFF"
+        android:contentDescription="@null"
+        android:importantForAccessibility="no"
         android:inputType="textPassword"
         app:layout_constraintBottom_toTopOf="@+id/button1"
         app:layout_constraintEnd_toEndOf="@id/guideline2"
@@ -81,19 +114,27 @@
         app:layout_constraintStart_toStartOf="@id/guideline1"
         app:layout_constraintEnd_toEndOf="@id/guideline2">
 
-    </com.google.android.material.textfield.TextInputLayout>
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/field2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="@+id/guideline2"
+        app:layout_constraintStart_toStartOf="@+id/guideline1"
+        app:layout_constraintTop_toBottomOf="@id/password" />
 
 
+    <!-- Botón Iniciar sesión -->
     <Button
         android:id="@+id/button1"
-        android:layout_width="139dp"
-        android:layout_height="36dp"
-        android:layout_marginBottom="212dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:backgroundTint="@color/principal"
-        android:text="@string/iniciarSesion"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@id/guideline2"
-        app:layout_constraintHorizontal_bias="0.347"
-        app:layout_constraintStart_toStartOf="@id/guideline1" />
+        android:text="Iniciar Sesión"
+        app:layout_constraintEnd_toEndOf="@+id/guideline2"
+        app:layout_constraintHorizontal_bias="0.55"
+        app:layout_constraintStart_toStartOf="@+id/guideline1"
+        app:layout_constraintTop_toBottomOf="@id/field2" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

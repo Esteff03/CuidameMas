@@ -15,20 +15,23 @@
 
         <activity
             android:name=".Splash"
-            android:exported="false" />
-
-        <activity
-            android:name=".Welcome"
-            android:exported="false" />
-
-        <activity
-            android:name=".Login"
-            android:exported="false" />
-
-
+            android:exported="true" />
+      
         <activity
             android:name=".TipoDeRegistro"
-            android:exported="true" >
+            android:exported="true" />
+      
+        <activity
+            android:name=".Welcome"
+            android:exported="true" />
+      
+        <activity
+            android:name=".MainActivity"
+            android:exported="true" />
+      
+        <activity
+            android:name=".Login"
+            android:exported="true">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -39,15 +42,7 @@
 
         <activity
             android:name=".Registro"
-            android:exported="false"/>
-
-        <activity
-            android:name=".MainActivity"
-            android:exported="false"/>
-
-
-
-
+            android:exported="true" />
 
         <meta-data
             android:name="preloaded_fonts"
