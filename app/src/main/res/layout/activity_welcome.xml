@@ -26,7 +26,7 @@
         android:layout_width="313dp"
         android:layout_height="82dp"
         android:text="BIENVENIDO"
-        android:textColor="@color/color"
+        android:textColor="@color/azul_cielo"
         android:textSize="40dp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
