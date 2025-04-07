@@ -43,11 +43,20 @@
             android:id="@+id/asteriscoNombre"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="48dp"
+            android:layout_marginStart="48dp"
             android:gravity="center_vertical"
-            android:text="*"
+            android:text="@string/asterisco"
             android:textColor="@android:color/holo_red_dark"
             android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/invisibleNombre"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/nombre"
+            android:layout_marginStart="40dp"
+            android:visibility="gone"
+            />
 
         <EditText
             android:id="@+id/nombre"
@@ -59,18 +68,26 @@
             android:hint="@string/nombre"
             android:inputType="text"
             android:layout_marginBottom="4dp"
-            android:layout_marginLeft="40dp"
+            android:layout_marginStart="40dp"
             />
 
         <TextView
             android:id="@+id/asteriscoApellido"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="48dp"
+            android:layout_marginStart="48dp"
             android:gravity="center_vertical"
-            android:text="*"
+            android:text="@string/asterisco"
             android:textColor="@android:color/holo_red_dark"
             android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/invisibleApellido"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/apellido"
+            android:layout_marginStart="40dp"
+            android:visibility="gone"/>
 
         <EditText
             android:id="@+id/apellido"
@@ -82,18 +99,25 @@
             android:hint="@string/apellido"
             android:inputType="text"
             android:layout_marginBottom="4dp"
-            android:layout_marginLeft="40dp"
+            android:layout_marginStart="40dp"
             />
 
         <TextView
             android:id="@+id/asteriscoEmail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
             android:gravity="center_vertical"
-            android:text="*"
+            android:text="@string/asterisco"
             android:textColor="@android:color/holo_red_dark"
             android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/invisibleCorreo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/email"
+            android:visibility="gone"/>
 
         <EditText
             android:id="@+id/email"
@@ -111,14 +135,22 @@
             android:id="@+id/asteriscoPassword"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
             android:gravity="center_vertical"
-            android:text="*"
+            android:text="@string/asterisco"
             android:textColor="@android:color/holo_red_dark"
             android:visibility="gone" />
 
+        <TextView
+            android:id="@+id/invisiblePassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/password"
+            android:visibility="gone"
+            />
+
         <EditText
-            android:id="@+id/contraseña"
+            android:id="@+id/password"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:autofillHints="contraseña"
@@ -133,11 +165,18 @@
             android:id="@+id/asteriscoDireccion"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
             android:gravity="center_vertical"
-            android:text="*"
+            android:text="@string/asterisco"
             android:textColor="@android:color/holo_red_dark"
             android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/invisibleDireccion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/direccion"
+            android:visibility="gone"/>
 
         <EditText
             android:id="@+id/direccion"
@@ -155,11 +194,18 @@
             android:id="@+id/asteriscoTelefono"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
             android:gravity="center_vertical"
-            android:text="*"
+            android:text="@string/asterisco"
             android:textColor="@android:color/holo_red_dark"
             android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/invisibleTelefono"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/telefono"
+            android:visibility="gone"/>
 
         <EditText
             android:id="@+id/telefono"
@@ -184,9 +230,8 @@
             android:backgroundTint="@color/principal"
             android:text="@string/continua"
             android:textColor="@android:color/white"
-            android:layout_marginLeft="50dp"
+            android:layout_marginStart="50dp"
             />
-
 
 
     </LinearLayout>

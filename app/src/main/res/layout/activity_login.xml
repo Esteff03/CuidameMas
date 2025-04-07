@@ -61,6 +61,7 @@
         app:layout_constraintStart_toStartOf="@+id/guideline1"
         app:layout_constraintTop_toTopOf="parent" />
 
+
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/email"
         android:layout_width="0dp"
@@ -89,6 +90,7 @@
         app:layout_constraintStart_toStartOf="@+id/guideline1"
         app:layout_constraintTop_toBottomOf="@id/email" />
 
+
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/password"
         android:layout_width="0dp"
@@ -99,10 +101,18 @@
         android:contentDescription="@null"
         android:importantForAccessibility="no"
         android:inputType="textPassword"
-        app:layout_constraintEnd_toEndOf="@+id/guideline2"
+        app:layout_constraintBottom_toTopOf="@+id/button1"
+        app:layout_constraintEnd_toEndOf="@id/guideline2"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/guideline1"
-        app:layout_constraintTop_toBottomOf="@id/contraseña" />
+        app:layout_constraintStart_toStartOf="@id/guideline1" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/field1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="@id/guideline1"
+        app:layout_constraintEnd_toEndOf="@id/guideline2">
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/field2"
@@ -112,6 +122,7 @@
         app:layout_constraintEnd_toEndOf="@+id/guideline2"
         app:layout_constraintStart_toStartOf="@+id/guideline1"
         app:layout_constraintTop_toBottomOf="@id/password" />
+
 
     <!-- Botón Iniciar sesión -->
     <Button

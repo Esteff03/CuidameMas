@@ -14,35 +14,35 @@ import jp.wasabeef.glide.transformations.BlurTransformation;
 
 
 public class Registro extends AppCompatActivity {
-    private ImageView fondo;
-    private String perfilSeleccionado;
-    private EditText edtNombre, edtApellido,edtEmail, edtPassword, edtDireccion, edtTelefono;
-    private Button btnContinuar;
+
+
+    EditText edtNombre, edtApellido,edtEmail, edtPassword, edtDireccion, edtTelefono;
+    Button btnContinuar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registro);
 
-        fondo = findViewById(R.id.fondoImagen);
+        ImageView fondo = findViewById(R.id.fondoImagen);
 
         edtNombre = findViewById(R.id.nombre);
         edtApellido = findViewById(R.id.apellido);
         edtEmail = findViewById(R.id.email);
-        edtPassword = findViewById(R.id.contraseña);
+        edtPassword = findViewById(R.id.password);
         edtDireccion = findViewById(R.id.direccion);
         edtTelefono = findViewById(R.id.telefono);
         btnContinuar = findViewById(R.id.botonContinuar);
 
         //Obtener el perfil desde el Intent
-        perfilSeleccionado = getIntent().getStringExtra("perfil");
+       // String perfilSeleccionado = getIntent().getStringExtra("perfil");
 
         //Uso del Glide para aplicar el desenfoque
         Glide.with(this)
                 .load(R.drawable.fondo)
                 .transform(new BlurTransformation(25))
                 .into(fondo);
-
+/*
         // Aquí  personalizar el formulario dependiendo del tipo de perfil
         if ("soyCuidador".equals(perfilSeleccionado)) {
 
@@ -50,8 +50,9 @@ public class Registro extends AppCompatActivity {
         } else if ("buscarCuidador".equals(perfilSeleccionado)) {
 
         }
-    }
 
+ */
+    }
     public void registrarUsuario(View view) {
 
         // OBTENGO LOS VALORES
@@ -62,30 +63,31 @@ public class Registro extends AppCompatActivity {
         String direccion = edtDireccion.getText().toString();
         String telefono = edtTelefono.getText().toString();
 
+        boolean todosDatos = !nombre.isEmpty() && !apellido.isEmpty() && !email.isEmpty() && !password.isEmpty() &&
+                !direccion.isEmpty() && !telefono.isEmpty();
+
         // COMPRUEBO SI NO ESTAN VACIOS
-        if (!nombre.isEmpty() && !apellido.isEmpty() && !email.isEmpty() && !password.isEmpty() && !direccion.isEmpty() && !telefono.isEmpty()) {
-            if (valida(email)) {
-               /*
-                if (password.equals(password)) {
-                        //Falta modificar las contraseñas
-                }*/
-            }else {
+        if (todosDatos) {
+
+            if (!valida(email)) {
+                verificarCampo(edtEmail, findViewById(R.id.asteriscoEmail), findViewById(R.id.invisibleCorreo));
                 Toast.makeText(this, "Correo no válido", Toast.LENGTH_SHORT).show();
-                verificarCampo(edtEmail, findViewById(R.id.asteriscoEmail));
+
             }
 
         } else {
             // Comprobamos los campos vacíos
-            verificarCampo(edtNombre, findViewById(R.id.asteriscoNombre));
-            verificarCampo(edtApellido, findViewById(R.id.asteriscoApellido));
-            verificarCampo(edtEmail, findViewById(R.id.asteriscoEmail));
-            verificarCampo(edtDireccion, findViewById(R.id.asteriscoDireccion));
-            verificarCampo(edtTelefono, findViewById(R.id.asteriscoTelefono));
-            verificarCampo(edtPassword, findViewById(R.id.asteriscoPassword));
+            verificarCampo(edtNombre, findViewById(R.id.asteriscoNombre), findViewById(R.id.invisibleNombre));
+            verificarCampo(edtApellido, findViewById(R.id.asteriscoApellido), findViewById(R.id.invisibleApellido));
+            verificarCampo(edtEmail, findViewById(R.id.asteriscoEmail), findViewById(R.id.invisibleCorreo));
+            verificarCampo(edtDireccion, findViewById(R.id.asteriscoDireccion), findViewById(R.id.invisibleDireccion));
+            verificarCampo(edtTelefono, findViewById(R.id.asteriscoTelefono), findViewById(R.id.invisibleTelefono));
+            verificarCampo(edtPassword, findViewById(R.id.asteriscoPassword), findViewById(R.id.invisiblePassword));
 
         }
 
     }
+
     private boolean valida(String mail) {
         String[] dominiosPermitidos = {"@gmail.com", "@hotmail.com", "@outlook.com", "@icloud.com", "@educa.madrid.org"};
 
@@ -97,11 +99,16 @@ public class Registro extends AppCompatActivity {
         return false;
     }
     // Metodo para gestionar la visibilidad del asterisco
-    private void verificarCampo(EditText editText, TextView asterisco) {
-        if (editText.getText().toString().isEmpty()) {
+    private void verificarCampo(EditText editText, TextView asterisco, TextView label) {
+        String texto =editText.getText().toString().trim();
+
+        if (texto.isEmpty()) {
             asterisco.setVisibility(View.VISIBLE);
+            label.setVisibility(View.GONE);
+
         } else {
             asterisco.setVisibility(View.GONE);
+            label.setVisibility(View.VISIBLE);
         }
     }
 
