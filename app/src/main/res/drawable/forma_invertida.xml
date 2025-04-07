@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="428dp"
+    android:height="207dp"
+    android:viewportWidth="418"
+    android:viewportHeight="207">
+
+    <!-- Fondo turquesa -->
+    <path
+        android:fillColor="@color/principal"
+    android:pathData="M0,40 L428,0 L428,207 L0,207 Z" />
+</vector>
