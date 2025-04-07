@@ -12,7 +12,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
-        android:layout_alignParentTop="true" />
+        android:layout_alignParentTop="true"
+        android:contentDescription="@null"
+        />
 
     <LinearLayout
         android:layout_width="305dp"
@@ -41,8 +43,9 @@
             android:id="@+id/botonCuidador"
             app:icon="@drawable/cuidador"
             app:iconGravity="textEnd"
-            app:iconTint="@color/black"
-            app:iconPadding="58dp"
+            app:iconTint="@color/negro"
+            app:iconPadding="70dp"
+            app:iconSize="32dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -50,14 +53,14 @@
             android:text="@string/soyCuidador"
             android:textColor="@android:color/black"
             android:backgroundTint="@color/crema"
-
             />
         <com.google.android.material.button.MaterialButton
             android:id="@+id/botonBuscoCuidador"
             app:icon="@drawable/buscador"
             app:iconGravity="textEnd"
-            app:iconTint="@color/black"
+            app:iconTint="@color/negro"
             app:iconPadding="50dp"
+            app:iconSize="32dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -65,7 +68,6 @@
             android:text="@string/buscoCuidador"
             android:textColor="@android:color/black"
             android:backgroundTint="@color/crema"
-
             />
 
         <Button
@@ -75,7 +77,8 @@
             android:layout_marginTop="16dp"
             android:backgroundTint="@color/principal"
             android:text="@string/registro"
-            android:textColor="@android:color/white" />
+            android:textColor="@color/blanco"
+            />
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
