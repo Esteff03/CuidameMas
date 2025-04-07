@@ -25,16 +25,12 @@ public class Welcome extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_welcome);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+
 
         ImageView fondo = findViewById(R.id.fondo);
 
         Glide.with(this)
-                .load(R.drawable.imagen) // Tu imagen de fondo
+                .load(R.drawable.fondo) // Tu imagen de fondo
                 .transform(new CenterCrop(), new BlurTransformation(10, 1)) // <-- Aquí aplicamos el desenfoque
                 .into(fondo);
 

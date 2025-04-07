@@ -5,8 +5,16 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/imagen"
     tools:context=".Login">
+
+    <ImageView
+        android:id="@+id/fondoImagen"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:layout_alignParentTop="true"
+        android:contentDescription="@null"
+        />
 
     <!-- Guidelines para márgenes laterales -->
     <androidx.constraintlayout.widget.Guideline
@@ -23,44 +31,20 @@
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.95" />
 
-    <!-- Imagen de fondo -->
-    <ImageView
-        android:id="@+id/fondo"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:adjustViewBounds="true"
-        android:contentDescription="fondo"
-        android:scaleType="centerCrop"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="ContentDescription" />
-
-    <!-- Texto Email -->
-
-    <!-- Input Email -->
-
-    <!-- Texto Contraseña -->
-
-    <!-- Input Contraseña -->
-
-    <!-- Campo vacío (si quieres lo puedes eliminar si no lo usas) -->
 
     <TextView
         android:id="@+id/Email"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="344dp"
-        android:text="Email"
+        android:layout_marginTop="312dp"
+        android:text="@string/emailTitulo"
         android:textColor="@color/blanco"
         android:textSize="32sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="@+id/guideline2"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/guideline1"
         app:layout_constraintTop_toTopOf="parent" />
-
 
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/email"
@@ -95,7 +79,6 @@
         android:id="@+id/password"
         android:layout_width="0dp"
         android:layout_height="51dp"
-        android:layout_marginTop="8dp"
         android:background="@drawable/rounded_edittext"
         android:backgroundTint="#F7FFFFFF"
         android:contentDescription="@null"
@@ -104,7 +87,9 @@
         app:layout_constraintBottom_toTopOf="@+id/button1"
         app:layout_constraintEnd_toEndOf="@id/guideline2"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@id/guideline1" />
+        app:layout_constraintStart_toStartOf="@id/guideline1"
+        app:layout_constraintTop_toBottomOf="@+id/contraseña"
+        app:layout_constraintVertical_bias="0.0" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/field1"
@@ -112,13 +97,12 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="@id/guideline1"
-        app:layout_constraintEnd_toEndOf="@id/guideline2">
+        app:layout_constraintEnd_toEndOf="@id/guideline2"/>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/field2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="@+id/guideline2"
         app:layout_constraintStart_toStartOf="@+id/guideline1"
         app:layout_constraintTop_toBottomOf="@id/password" />
@@ -127,13 +111,14 @@
     <!-- Botón Iniciar sesión -->
     <Button
         android:id="@+id/button1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="182dp"
+        android:layout_height="62dp"
         android:layout_marginTop="20dp"
         android:backgroundTint="@color/principal"
-        android:text="Iniciar Sesión"
+        android:text="@string/iniciarSesion"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/guideline2"
-        app:layout_constraintHorizontal_bias="0.55"
         app:layout_constraintStart_toStartOf="@+id/guideline1"
         app:layout_constraintTop_toBottomOf="@id/field2" />
 
