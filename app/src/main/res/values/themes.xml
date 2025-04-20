@@ -3,6 +3,9 @@
     <style name="Base.Theme.Cuidame" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">@color/principal</item>
+        <item name="colorPrimaryDark">@color/principal</item>
+        <item name="toolbarStyle">@style/Widget.MaterialComponents.Toolbar.PrimarySurface</item>
     </style>
 
     <style name="Theme.Cuidame" parent="Base.Theme.Cuidame" />
