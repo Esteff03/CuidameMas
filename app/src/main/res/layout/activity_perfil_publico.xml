@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/blanco"
+    >
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/miToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="25dp"
+        android:background="@color/principal"
+        android:elevation="4dp"
+        tools:ignore="MissingConstraints" />
+<ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/blanco"
+        android:id="@+id/main"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
+
+
+            <ImageView
+                android:id="@+id/btnAtras"
+                android:layout_width="34dp"
+                android:layout_height="34dp"
+                android:contentDescription="@string/miCuenta"
+                android:src="@drawable/flecha"
+                android:layout_gravity="start"
+                android:onClick="atras"/>
+
+
+
+            <ImageView
+                android:id="@+id/imgPerfil"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginBottom="16dp"
+                android:src="@drawable/camara"
+                android:background="@drawable/forma_circulo"
+                android:padding="16dp"
+                android:contentDescription="@string/descripcionImagen" />
+
+            <TextView
+                android:id="@+id/txtNombre"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/nombre"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:fontFamily="@font/fredoka"
+                android:layout_marginBottom="8dp" />
+
+            <TextView
+                android:id="@+id/txtFechaNacimiento"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/fechaNacimiento"
+                android:textSize="16sp"
+                android:fontFamily="@font/inter" />
+
+            <TextView
+                android:id="@+id/txtSexo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sexo"
+                android:textSize="16sp"
+                android:layout_marginTop="4dp"
+                android:fontFamily="@font/inter" />
+
+            <TextView
+                android:id="@+id/txtDireccion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/direccion"
+                android:textSize="16sp"
+                android:layout_marginTop="4dp"
+                android:fontFamily="@font/inter" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/inter_semibold"
+                android:text="@string/descripcionB"
+                android:textAlignment="center"
+                android:textSize="17sp" />
+
+            <TextView
+                android:id="@+id/txtSalario"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/salario"
+                android:textSize="16sp"
+                android:layout_marginTop="4dp"
+                android:fontFamily="@font/inter" />
+
+            <TextView
+                android:id="@+id/txtExperiencia"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/experiencia"
+                android:textSize="16sp"
+                android:layout_marginTop="4dp"
+                android:fontFamily="@font/inter" />
+
+            <TextView
+                android:id="@+id/txtReferencia"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/Conreferencias"
+                android:textSize="16sp"
+                android:layout_marginTop="4dp"
+                android:fontFamily="@font/inter" />
+
+            <TextView
+                android:id="@+id/txtTipoTiempo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/TipoDeTiempo"
+                android:textSize="16sp"
+                android:layout_marginTop="4dp"
+                android:fontFamily="@font/inter" />
+
+            <TextView
+                android:id="@+id/txtSobreMi"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/SobreMi"
+                android:textSize="16sp"
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/inter"
+                android:textAlignment="center" />
+
+        </LinearLayout>
+</ScrollView>
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/menu_dibujo"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:menu="@menu/nav_menu"
+        app:labelVisibilityMode="unlabeled"
+        app:itemIconSize="40dp"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

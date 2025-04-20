@@ -9,13 +9,33 @@
     <string name="apellido">Apellido</string>
     <string name="email">Correo Electronico</string>
     <string name="password">Contraseña</string>
-    <string name="direccion">Direccion</string>
+    <string name="direccion">Dirección</string>
     <string name="telefono">Telefono</string>
     <string name="continua">Continuar</string>
     <string name="emailTitulo">Email</string>
+    <string name="fechaNacimiento">Fecha de Nacimiento</string>
     <string name="iniciarSesion">Iniciar Sesion</string>
     <string name="bienvenido">BIENVENIDO</string>
     <string name="asterisco">*</string>
     <string name="descripcionImagen">Imagen decorativa</string>
+    <string name="sexo">Sexo</string>
+    <string name="mujer">Mujer</string>
+    <string name="hormbre">Hombre</string>
+    <string name="miCuenta">MI CUENTA</string>
+    <string name="descripcionB">Describe lo que Buscas</string>
+    <string name="Desde">Desde</string>
+    <string name="Hasta">Hasta</string>
+    <string name="salario">Salario</string>
+    <string name="experiencia">Experiencia</string>
+    <string name="referencia">Referencias</string>
+    <string name="TipoDeTiempo">Tipo de Tiempo</string>
+    <string name="SobreMi">Sobre Mi</string>
+    <string name="VerPerfil">Ver Perfil público</string>
+    <string name="Cuantaexperiencia">¿Cuántos años de experiencia?</string>
+    <string name="Conreferencias">¿Con Referencias?</string>
+    <string name="configuracion">Configuracion</string>
+    <string name="chat">Chat</string>
+    <string name="perfil">Perfil</string>
+    <string name="mapa">Mapa</string>
 
 </resources>
