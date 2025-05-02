@@ -3,6 +3,7 @@ package com.synunezcamacho.cuidame;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
@@ -23,6 +25,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 
 import java.util.Calendar;
 
@@ -126,8 +129,8 @@ public class Perfil extends AppCompatActivity {
         });
         configurarTextosPorPerfil(usuario);
 
-/*
-//la parte del menu_nav
+ /*
+        //la parte del menu_nav
 
         nav_menu.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
@@ -150,10 +153,9 @@ public class Perfil extends AppCompatActivity {
                 return false;
             }
         });
-
-
 */
     }
+
 
     private void configuracionSpinner(Spinner spinner, String[] opciones) {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
@@ -181,19 +183,22 @@ public class Perfil extends AppCompatActivity {
         String salarioHastaText = salarioHasta.getText().toString();
         double salarioDesdeValor = Double.parseDouble(salarioDesdeText);
         double salarioHastaValor = Double.parseDouble(salarioHastaText);
-        try {
+
+        try{
+
             if (salarioHastaValor < salarioDesdeValor) {
                 Toast.makeText(Perfil.this, "El salario Incorrecto", Toast.LENGTH_SHORT).show();
                 return false;
             } else {
                 usuario.setSalarioDesde(salarioDesdeText);
                 usuario.setSalarioHasta(salarioHastaText);
-                return  true;
+                return true;
             }
-        } catch (NumberFormatException e) {
-            Toast.makeText(this, "Introduce números válidos ", Toast.LENGTH_SHORT).show();
+        }catch (NumberFormatException e){
+            Toast.makeText(this, "Introduce números válidos en el salario", Toast.LENGTH_SHORT).show();
             return false;
         }
+
     }
 
     private void spinnersUsuario(Usuario usuario) {
@@ -237,6 +242,5 @@ public class Perfil extends AppCompatActivity {
             cambio4.setText("¿Con Referencias?");
         }
     }
-
 
 }

@@ -1,5 +1,6 @@
 package com.synunezcamacho.cuidame;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
@@ -16,8 +17,6 @@ import jp.wasabeef.glide.transformations.BlurTransformation;
 
 
 public class Registro extends AppCompatActivity {
-
-
     EditText edtNombre, edtApellido,edtEmail, edtPassword, edtDireccion, edtTelefono;
     Button btnContinuar;
 
@@ -38,45 +37,51 @@ public class Registro extends AppCompatActivity {
         btnContinuar = findViewById(R.id.botonContinuar);
 
         //Obtener el perfil desde el Intent
-       // String perfilSeleccionado = getIntent().getStringExtra("perfil");
+        String perfilSeleccionado = getIntent().getStringExtra("perfil");
 
         //Uso del Glide para aplicar el desenfoque
         Glide.with(this)
                 .load(R.drawable.fondo)
                 .transform(new BlurTransformation(25))
                 .into(fondo);
-/*
-        // Aquí  personalizar el formulario dependiendo del tipo de perfil
-        if ("soyCuidador".equals(perfilSeleccionado)) {
 
+        // Aquí  personaliza el formulario dependiendo del tipo de perfil
+            if ("soyCuidador".equals(perfilSeleccionado) || "buscarCuidador".equals(perfilSeleccionado)) {
+                btnContinuar.setOnClickListener(view -> {
+                    Usuario getActualUser = registrarUsuario();
+                    if(getActualUser != null){
+                        getActualUser.setCuidado("soyCuidador".equals(perfilSeleccionado));
+                        Intent intent = new Intent(Registro.this, Perfil.class);
+                        intent.putExtra("perfil", getActualUser);
+                        startActivity(intent);
+                    }
+                });
+            }
 
-        } else if ("buscarCuidador".equals(perfilSeleccionado)) {
-
-        }
-
- */
     }
-    public void registrarUsuario(View view) {
+    public Usuario registrarUsuario() {
 
         // OBTENGO LOS VALORES
-        String nombre = edtNombre.getText().toString();
-        String apellido = edtApellido.getText().toString();
-        String email = edtEmail.getText().toString();
-        String password = edtPassword.getText().toString();
-        String direccion = edtDireccion.getText().toString();
-        String telefono = edtTelefono.getText().toString();
-
-        boolean todosDatos = !nombre.isEmpty() && !apellido.isEmpty() && !email.isEmpty() && !password.isEmpty() &&
-                !direccion.isEmpty() && !telefono.isEmpty();
+        Usuario usuario = new Usuario();
+        usuario.setNombre(edtNombre.getText().toString());
+        usuario.setApellido(edtApellido.getText().toString());
+        usuario.setEmail(edtEmail.getText().toString());
+        usuario.setPassword(edtPassword.getText().toString());
+        usuario.setDireccion(edtDireccion.getText().toString());
+        usuario.setTelefono(edtTelefono.getText().toString());
 
         // COMPRUEBO SI NO ESTAN VACIOS
-        if (todosDatos) {
-
-            if (!valida(email)) {
+        if (validaPerfil(usuario)) {
+            if (!validaCorreo(usuario.getEmail())) {
                 verificarCampo(edtEmail, findViewById(R.id.asteriscoEmail), findViewById(R.id.invisibleCorreo));
                 Toast.makeText(this, "Correo no válido", Toast.LENGTH_SHORT).show();
-
+                return null;
             }
+            if (!validaTelefono(usuario.getTelefono())){
+                Toast.makeText(this, "Telefono no válido", Toast.LENGTH_SHORT).show();
+                return null;
+            }
+            return usuario;
 
         } else {
             // Comprobamos los campos vacíos
@@ -88,10 +93,17 @@ public class Registro extends AppCompatActivity {
             verificarCampo(edtPassword, findViewById(R.id.asteriscoPassword), findViewById(R.id.invisiblePassword));
 
         }
-
+        return null;
     }
-
-    private boolean valida(String mail) {
+    private boolean validaPerfil(Usuario usuario) {
+        return !usuario.getNombre().isEmpty() &&
+                !usuario.getApellido().isEmpty() &&
+                !usuario.getEmail().isEmpty() &&
+                !usuario.getDireccion().isEmpty() &&
+                !usuario.getPassword().isEmpty() &&
+                !usuario.getTelefono().isEmpty();
+    }
+    private boolean validaCorreo(String mail) {
         String[] dominiosPermitidos = {"@gmail.com", "@hotmail.com", "@outlook.com", "@icloud.com", "@educa.madrid.org"};
 
         for (String dominio : dominiosPermitidos) {
@@ -100,6 +112,15 @@ public class Registro extends AppCompatActivity {
             }
         }
         return false;
+    }
+    private boolean validaTelefono(String telefono){
+        telefono = edtTelefono.getText().toString().trim();
+        String patronMovilEspaña = "^[67]\\d{8}$";
+
+        if (telefono.matches(patronMovilEspaña)) {
+            return true;
+        }
+            return false;
     }
     // Metodo para gestionar la visibilidad del asterisco
     private void verificarCampo(EditText editText, TextView asterisco, TextView label) {
