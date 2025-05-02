@@ -32,10 +32,10 @@
     <string name="SobreMi">Sobre Mi</string>
     <string name="VerPerfil">Ver Perfil público</string>
     <string name="Cuantaexperiencia">¿Cuántos años de experiencia?</string>
-    <string name="Conreferencias">¿Con Referencias?</string>
     <string name="configuracion">Configuracion</string>
     <string name="chat">Chat</string>
     <string name="perfil">Perfil</string>
     <string name="mapa">Mapa</string>
+    <string name="guardar">Guardar</string>
 
 </resources>

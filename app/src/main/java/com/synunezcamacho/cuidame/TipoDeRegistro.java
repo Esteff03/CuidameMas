@@ -38,6 +38,7 @@ public class TipoDeRegistro extends AppCompatActivity {
                 .into(fondo);
 
 
+        // Deselecciona si ya está seleccionado
         botonCuidador.setOnClickListener(view -> {
             if ("soyCuidador".equals(perfilSeleccionado)) {
                 perfilSeleccionado = "";
@@ -49,7 +50,7 @@ public class TipoDeRegistro extends AppCompatActivity {
         });
         botonBuscoCuidador.setOnClickListener(view -> {
             if ("buscarCuidador".equals(perfilSeleccionado)) {
-                perfilSeleccionado = ""; // Deselecciona si ya está seleccionado
+                perfilSeleccionado = "";
             } else {
                 perfilSeleccionado = "buscarCuidador";
             }

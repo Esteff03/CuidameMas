@@ -73,7 +73,7 @@
         <EditText
             android:id="@+id/edtNombre"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:layout_gravity="center"
             android:layout_marginTop="8dp"
             android:background="@android:color/transparent"
@@ -160,11 +160,13 @@
             android:inputType="text" />
 
         <TextView
+            android:id="@+id/cambio1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:fontFamily="@font/inter_semibold"
-            android:text="@string/descripcionB"
+            android:text=""
+            android:visibility="visible"
             android:textAlignment="center"
             android:textSize="17sp" />
 
@@ -226,12 +228,11 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/textView6"
+            android:id="@+id/cambio2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:fontFamily="@font/inter"
-            android:text="@string/experiencia"
             android:textSize="17sp"
             android:textStyle="bold" />
     <LinearLayout
@@ -241,17 +242,16 @@
         android:gravity="center_vertical"
         android:orientation="horizontal">
         <TextView
-            android:id="@+id/edtExperiencia"
+            android:id="@+id/cambio3"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:fontFamily="@font/inter"
             android:gravity="fill"
-            android:text="@string/Cuantaexperiencia"
             android:textSize="17sp" />
         <Spinner
             android:id="@+id/spinnerExperiencia"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             />
 
 
@@ -275,11 +275,11 @@
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/cambio4"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:fontFamily="@font/inter"
-                android:text="@string/Conreferencias"
                 android:textSize="17sp" />
 
             <CheckBox
@@ -325,16 +325,38 @@
             android:inputType=""
             android:minLines="3" />
 
-        <Button
-            android:id="@+id/btnVerPerfilPublico"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:background="@drawable/boton_borde_blanco"
-            android:fontFamily="@font/inter"
-            android:text="@string/VerPerfil"
-            android:textColor="@color/negro"
-            android:textSize="17sp" />
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="8dp"
+            android:paddingHorizontal="16dp">
+
+            <Button
+                android:id="@+id/btnGuardar"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/boton_borde_blanco"
+                android:fontFamily="@font/inter"
+                android:text="@string/guardar"
+                android:textColor="@color/negro"
+                android:textSize="17sp"/>
+
+            <Button
+                android:id="@+id/btnVerPerfilPublico"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:background="@drawable/boton_borde_blanco"
+                android:fontFamily="@font/inter"
+                android:text="@string/VerPerfil"
+                android:textColor="@color/negro"
+                android:textSize="17sp"
+                android:maxLines="2"
+                android:gravity="center"/>
+        </LinearLayout>
+
 
     </LinearLayout>
 </ScrollView>

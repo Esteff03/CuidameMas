@@ -68,13 +68,17 @@ public class Registro extends AppCompatActivity {
         usuario.setEmail(edtEmail.getText().toString());
         usuario.setPassword(edtPassword.getText().toString());
         usuario.setDireccion(edtDireccion.getText().toString());
-        usuario.setTelefono(edtTelefono.getText().toString()); //TODO: BUSCAR VALIDACION TELEFONO
+        usuario.setTelefono(edtTelefono.getText().toString());
 
         // COMPRUEBO SI NO ESTAN VACIOS
         if (validaPerfil(usuario)) {
             if (!validaCorreo(usuario.getEmail())) {
                 verificarCampo(edtEmail, findViewById(R.id.asteriscoEmail), findViewById(R.id.invisibleCorreo));
                 Toast.makeText(this, "Correo no válido", Toast.LENGTH_SHORT).show();
+                return null;
+            }
+            if (!validaTelefono(usuario.getTelefono())){
+                Toast.makeText(this, "Telefono no válido", Toast.LENGTH_SHORT).show();
                 return null;
             }
             return usuario;
@@ -108,6 +112,15 @@ public class Registro extends AppCompatActivity {
             }
         }
         return false;
+    }
+    private boolean validaTelefono(String telefono){
+        telefono = edtTelefono.getText().toString().trim();
+        String patronMovilEspaña = "^[67]\\d{8}$";
+
+        if (telefono.matches(patronMovilEspaña)) {
+            return true;
+        }
+            return false;
     }
     // Metodo para gestionar la visibilidad del asterisco
     private void verificarCampo(EditText editText, TextView asterisco, TextView label) {
