@@ -37,5 +37,6 @@
     <string name="perfil">Perfil</string>
     <string name="mapa">Mapa</string>
     <string name="guardar">Guardar</string>
-
+    <string name="chatTitulo">CHAT</string>
+    <string name="mensaje">Mensaje</string>
 </resources>
