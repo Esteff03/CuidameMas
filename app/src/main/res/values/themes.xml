@@ -9,4 +9,15 @@
     </style>
 
     <style name="Theme.Cuidame" parent="Base.Theme.Cuidame" />
+    <style name="barrabusqueda">
+        <item name="android:layout_width">370dp</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:layout_alignParentStart">true</item>
+        <item name="android:layout_alignParentTop">true</item>
+        <item name="android:layout_alignParentEnd">true</item>
+        <item name="android:layout_marginStart">21dp</item>
+        <item name="android:layout_marginTop">40dp</item>
+        <item name="android:layout_marginEnd">21dp</item>
+        <item name="android:background">@drawable/fondobarra</item>
+    </style>
 </resources>
