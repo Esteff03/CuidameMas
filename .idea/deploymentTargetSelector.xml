@@ -16,10 +16,16 @@
       <SelectionState runConfigName="Mapa">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="Welcome">
+      <SelectionState runConfigName="Perfil">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="TipoDeRegistro">
+      <SelectionState runConfigName="Login">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="MainActivity">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="Registro">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>
