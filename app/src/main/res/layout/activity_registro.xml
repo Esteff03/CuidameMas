@@ -243,7 +243,6 @@
             android:layout_marginStart="50dp"
             android:layout_marginTop="16dp"
             android:backgroundTint="@color/principal"
-            android:onClick="registrarUsuario"
             android:text="@string/continua"
             android:textColor="@android:color/white" />
 
