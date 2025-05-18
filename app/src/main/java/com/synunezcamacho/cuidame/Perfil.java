@@ -1,14 +1,21 @@
 package com.synunezcamacho.cuidame;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
-import android.view.MenuItem;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -16,29 +23,35 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.navigation.NavigationBarView;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Calendar;
 
 public class Perfil extends AppCompatActivity {
+    private static final int PICK_IMAGE_REQUEST = 1;
     Spinner spinnerTipoTiempo, spinnerExperiencia;
     Toolbar toolbar;
     Bundle bundle;
     EditText edtNombre, edtDireccion, edtFechaNacimiento;
     EditText salarioDesde, salarioHasta, edtSobreMi;
+    private String imgSeleccionada = null;
+    ImageView imgPerfil;
     RadioGroup sexoGroup;
     RadioButton rbMuje, rbHombre;
     CheckBox checkBoxReferencia;
-    Button btnVerPerfilPublico;
+    Button btnVerPerfilPublico, btnGuardar;
     TextView cambio1, cambio2,cambio3, cambio4;
 
     @Override
@@ -46,6 +59,9 @@ public class Perfil extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_perfil);
+
+        imgPerfil = findViewById(R.id.imgPerfil);
+        btnGuardar = findViewById(R.id.btnGuardar);
 
         edtNombre = findViewById(R.id.edtNombre);
         edtDireccion = findViewById(R.id.edtDireccion);
@@ -60,6 +76,7 @@ public class Perfil extends AppCompatActivity {
         checkBoxReferencia = findViewById(R.id.checkBoxReferencia);
         edtSobreMi = findViewById(R.id.edtSobreMi);
         btnVerPerfilPublico = findViewById(R.id.btnVerPerfilPublico);
+
         BottomNavigationView nav_menu = findViewById(R.id.bottom_navigation);
         nav_menu.setSelectedItemId(R.id.page_search);
 
@@ -88,6 +105,7 @@ public class Perfil extends AppCompatActivity {
         //Recojo los valores del Usuario
         bundle = getIntent().getExtras();
         Usuario usuario = (Usuario)bundle.getSerializable("perfil");
+        usuario.setImgPerfil(imgSeleccionada != null ? imgSeleccionada : "android.resource://" + getPackageName() + "/" + R.drawable.camara);
         edtNombre.setText(usuario.getNombre() +" " + usuario.getApellido());
         edtDireccion.setText(usuario.getDireccion());
 
@@ -128,6 +146,16 @@ public class Perfil extends AppCompatActivity {
             startActivity(intent);
         });
         configurarTextosPorPerfil(usuario);
+
+
+        //Parte para acceder a la galeria
+        imgPerfil.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                abrirGaleria();
+            }
+        });
+
 
  /*
         //la parte del menu_nav
@@ -242,5 +270,22 @@ public class Perfil extends AppCompatActivity {
             cambio4.setText("¿Con Referencias?");
         }
     }
+
+    private void abrirGaleria(){
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        intent.setType("image/*");
+        startActivityForResult(intent, PICK_IMAGE_REQUEST);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && data != null && data.getData() != null) {
+            Uri selectedImageUri = data.getData();
+            imgSeleccionada = selectedImageUri.toString();
+            imgPerfil.setImageURI(selectedImageUri);
+        }
+    }
+
 
 }

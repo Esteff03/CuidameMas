@@ -44,4 +44,7 @@
     <string name="referencias">Referencias</string>
     <string name="Tipo_de_tiempo">Tipo de tiempo</string>
     <string name="sobre_mi">Sobre mi</string>
+    <string name="chatTitulo">CHAT</string>
+    <string name="mensaje">Mensaje</string>
+    <string name="guardar">Guardar</string>
 </resources>

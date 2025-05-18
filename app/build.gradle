@@ -49,6 +49,11 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.6.0'  // Para usar Toolbar y AppCompatActivity
     implementation 'com.google.android.material:material:1.9.0'  // Para Material Components (si usas Material Design)
 
+    //Imagen en formato redondo
+    implementation 'com.github.bumptech.glide:glide:4.16.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.16.0'
+
+
 
 
 }

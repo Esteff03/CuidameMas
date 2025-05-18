@@ -81,6 +81,12 @@ public class Registro extends AppCompatActivity {
                 Toast.makeText(this, "Correo no válido", Toast.LENGTH_SHORT).show();
                 return null;
             }
+            if (!validaTelefono(usuario.getTelefono())) {
+                verificarCampo(edtTelefono, findViewById(R.id.asteriscoTelefono), findViewById(R.id.invisibleTelefono));
+                Toast.makeText(this, "Número de teléfono no válido", Toast.LENGTH_SHORT).show();
+                return null;
+            }
+
             return usuario;
         } else {
             verificarCampo(edtNombre, findViewById(R.id.asteriscoNombre), findViewById(R.id.invisibleNombre));
@@ -176,6 +182,7 @@ public class Registro extends AppCompatActivity {
     }
 
     private boolean validaCorreo(String mail) {
+        mail = mail.trim().toLowerCase();
         String[] dominiosPermitidos = {"@gmail.com", "@hotmail.com", "@outlook.com", "@icloud.com", "@educa.madrid.org"};
         for (String dominio : dominiosPermitidos) {
             if (mail.endsWith(dominio)) {
@@ -183,6 +190,10 @@ public class Registro extends AppCompatActivity {
             }
         }
         return false;
+    }
+
+    private boolean validaTelefono(String telefono) {
+        return telefono.matches("^[6-9]\\d{8}$");
     }
 
     private void verificarCampo(EditText editText, TextView asterisco, TextView label) {

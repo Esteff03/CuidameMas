@@ -1,6 +1,7 @@
 package com.synunezcamacho.cuidame;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -17,7 +18,7 @@ public class PerfilPublico extends AppCompatActivity {
     Toolbar toolbar;
     TextView txtNombre, txtFechaNacimiento, txtSexo, txtDireccion;
     TextView txtSalario, txtExperiencia, txtReferencia, txtTipoTiempo, txtSobreMi;
-    ImageView imgAtras;
+    ImageView imgAtras, imgPerfil;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +46,7 @@ public class PerfilPublico extends AppCompatActivity {
         txtReferencia = findViewById(R.id.txtReferencia);
         txtTipoTiempo = findViewById(R.id.txtTipoTiempo);
         txtSobreMi = findViewById(R.id.txtSobreMi);
+        imgPerfil = findViewById(R.id.imgPerfil);
 
         imgAtras = findViewById(R.id.btnAtras);
 
@@ -57,6 +59,7 @@ public class PerfilPublico extends AppCompatActivity {
         Usuario usuario = (Usuario) getIntent().getSerializableExtra("perfil");
 
         if (usuario != null) {
+            imgPerfil.setImageURI(Uri.parse(usuario.getImgPerfil()));
             txtNombre.setText(usuario.getNombre() + " " + usuario.getApellido());
             txtFechaNacimiento.setText("Fecha Nacimiento: "+usuario.getFechaNacimiento());
             txtSexo.setText("Sexo: " + usuario.getGenero());
@@ -66,6 +69,7 @@ public class PerfilPublico extends AppCompatActivity {
             txtReferencia.setText("Referencias: " + usuario.getReferencias());
             txtTipoTiempo.setText("Tipo de Tiempo: " + usuario.getTipotiempo());
             txtSobreMi.setText("Sobre Mi: " + usuario.getSobremi());
+
 
         }
 

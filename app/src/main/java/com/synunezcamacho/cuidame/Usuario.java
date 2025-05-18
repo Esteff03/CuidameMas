@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class Usuario implements Serializable {
     private String nombre, apellido, email, password, direccion, telefono;
-    private String fechaNacimiento, genero, salarioDesde, salarioHasta, experiencia, referencias, tipotiempo, sobremi;
+    private String fechaNacimiento, genero, salarioDesde, salarioHasta, experiencia, referencias, tipotiempo, sobremi, imgPerfil;
     private Boolean cuidado;
     public Usuario(){}
 
@@ -14,6 +14,14 @@ public class Usuario implements Serializable {
 
     public void setCuidado(Boolean cuidado) {
         this.cuidado = cuidado;
+    }
+
+    public String getImgPerfil() {
+        return imgPerfil;
+    }
+
+    public void setImgPerfil(String imgPerfil) {
+        this.imgPerfil = imgPerfil;
     }
 
     public String getNombre() {
@@ -127,4 +135,5 @@ public class Usuario implements Serializable {
     public void setSobremi(String sobremi) {
         this.sobremi = sobremi;
     }
+
 }
