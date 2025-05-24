@@ -2,6 +2,7 @@ package com.synunezcamacho.cuidame;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
@@ -29,8 +30,6 @@ import java.util.List;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-
-
 
 public class Mapa extends FragmentActivity implements OnMapReadyCallback {
 
@@ -60,9 +59,7 @@ public class Mapa extends FragmentActivity implements OnMapReadyCallback {
             mapFragment.getMapAsync(this);
         }
 
-        listAdapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1,
-                new ArrayList<>());
+        listAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, new ArrayList<>());
         listView.setAdapter(listAdapter);
 
         configurarBuscador();
@@ -95,11 +92,9 @@ public class Mapa extends FragmentActivity implements OnMapReadyCallback {
 
     private void buscarCercanosPorCalle(String direccion) {
         try {
-
             String url = "https://maps.googleapis.com/maps/api/geocode/json?address=" +
                     URLEncoder.encode(direccion, "UTF-8") +
-                    "&key=AIzaSyDDzubmOggWoNZguBTSnkug-U5y3AWicOE";
-            Log.d("Geocoding URL", url); // Log para ver si la URL es correcta
+                    "&key=" + GEOCODING_API_KEY;
 
             Request request = new Request.Builder().url(url).build();
             httpClient.newCall(request).enqueue(new okhttp3.Callback() {
@@ -118,7 +113,6 @@ public class Mapa extends FragmentActivity implements OnMapReadyCallback {
                     }
 
                     String body = response.body().string();
-                    Log.d("Geocoding Response", body); // Log para ver la respuesta completa
 
                     try {
                         JSONObject json = new JSONObject(body);
@@ -130,9 +124,6 @@ public class Mapa extends FragmentActivity implements OnMapReadyCallback {
                             double lat = location.getDouble("lat");
                             double lng = location.getDouble("lng");
                             LatLng coordenadas = new LatLng(lat, lng);
-
-                            // Asegurarte de que las coordenadas no sean cero
-                            Log.d("Geocoding Result", "Lat: " + lat + ", Lng: " + lng);
 
                             runOnUiThread(() -> mostrarUbicacionYUsuarios(coordenadas, direccion));
                         } else {
@@ -171,6 +162,30 @@ public class Mapa extends FragmentActivity implements OnMapReadyCallback {
         buscarUsuariosCercanos(coordenadas);
     }
 
+    @Override
+    public void onMapReady(GoogleMap map) {
+        this.googleMap = map;
+
+        try {
+            boolean success = googleMap.setMapStyle(
+                    MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style));
+            if (!success) {
+                Log.e("MAPA", "Style parsing failed.");
+            }
+        } catch (Resources.NotFoundException e) {
+            Log.e("MAPA", "Can't find style.", e);
+        }
+
+        if (ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            googleMap.setMyLocationEnabled(true);
+        } else {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    LOCATION_PERMISSION_REQUEST_CODE);
+        }
+    }
+
     private void buscarUsuariosCercanos(LatLng centro) {
         new Thread(() -> {
             try {
@@ -182,7 +197,6 @@ public class Mapa extends FragmentActivity implements OnMapReadyCallback {
 
                 okhttp3.Response response = httpClient.newCall(request).execute();
                 if (!response.isSuccessful()) {
-                    Log.e("SUPABASE_ERROR", "Código: " + response.code() + " - Cuerpo: " + response.body().string());
                     throw new IOException("Error al obtener usuarios");
                 }
 
@@ -195,15 +209,12 @@ public class Mapa extends FragmentActivity implements OnMapReadyCallback {
                     Double lat = obj.optDouble("Latitud", 0.0);
                     Double lng = obj.optDouble("Longitud", 0.0);
 
-
-                    // Verificamos que las coordenadas no sean (0.0, 0.0)
                     if (lat != 0.0 && lng != 0.0) {
                         float[] results = new float[1];
                         Location.distanceBetween(
                                 centro.latitude, centro.longitude,
                                 lat, lng,
                                 results);
-                        Log.d("CentroCoords", "Centro Lat: " + centro.latitude + ", Lng: " + centro.longitude);
 
                         if (results[0] <= 5000) {
                             Usuarios u = new Usuarios();
@@ -215,9 +226,7 @@ public class Mapa extends FragmentActivity implements OnMapReadyCallback {
                             u.setRol(obj.optString("Rol", ""));
                             u.setLatitud(lat);
                             u.setLongitud(lng);
-
                             encontrados.add(u);
-
                         }
                     }
                 }
@@ -231,16 +240,12 @@ public class Mapa extends FragmentActivity implements OnMapReadyCallback {
         }).start();
     }
 
-
-
     private void mostrarUsuariosEnMapa(List<Usuarios> lista) {
         listAdapter.clear();
         usuariosVisibles.clear();
 
         for (Usuarios u : lista) {
-
             LatLng loc = new LatLng(u.getLatitud(), u.getLongitud());
-            Log.d("UsuarioCoords", "Lat: " + u.getLatitud() + ", Lng: " + u.getLongitud());
 
             googleMap.addMarker(new MarkerOptions()
                     .position(loc)
@@ -254,8 +259,8 @@ public class Mapa extends FragmentActivity implements OnMapReadyCallback {
                     + "\n" + u.getDireccion()
                     + "\nBarrio: " + u.getBarrio()
                     + "\nTel: " + u.getTelefono());
-            usuariosVisibles.add(u);
 
+            usuariosVisibles.add(u);
         }
 
         listAdapter.notifyDataSetChanged();
@@ -273,20 +278,6 @@ public class Mapa extends FragmentActivity implements OnMapReadyCallback {
                     .setPositiveButton("Aceptar", null)
                     .show();
         });
-    }
-
-    @Override
-    public void onMapReady(GoogleMap map) {
-        this.googleMap = map;
-        if (ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
-            googleMap.setMyLocationEnabled(true);
-        } else {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    LOCATION_PERMISSION_REQUEST_CODE);
-        }
     }
 
     @Override
