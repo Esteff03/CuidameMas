@@ -1,6 +1,8 @@
 package com.synunezcamacho.cuidame;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.ImageView;
 
 import androidx.activity.EdgeToEdge;
@@ -27,5 +29,19 @@ public class Welcome extends AppCompatActivity {
                 .transform(new CenterCrop(), new BlurTransformation(10, 1)) // <-- Aquí aplicamos el desenfoque
                 .into(fondo);
 
+        Button registrarse = findViewById(R.id.btnRegistrarse);
+        Button IniciarSesion = findViewById(R.id.btnIniciarSesion);
+
+        registrarse.setOnClickListener(v -> {
+            Intent intent = new Intent(Welcome.this, TipoDeRegistro.class); // Cambia RegistroActivity por la clase destino
+            startActivity(intent);
+        });
+
+        IniciarSesion.setOnClickListener(v -> {
+            Intent intent = new Intent(Welcome.this, Login.class); // Cambia LoginActivity por la clase destino
+            startActivity(intent);
+        });
     }
+
+
 }
