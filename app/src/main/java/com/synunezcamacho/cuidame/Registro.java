@@ -127,6 +127,22 @@ public class Registro extends AppCompatActivity {
 
                 String responseStr = response.toString();
 
+                try {
+                    JSONObject jsonResponse = new JSONObject(responseStr);
+                    JSONObject user = jsonResponse.optJSONObject("user");
+                    if (user != null) {
+                        String userId = user.getString("id");
+
+                        // Guardar en SharedPreferences
+                        getSharedPreferences("session", MODE_PRIVATE)
+                                .edit()
+                                .putString("user_id", userId)
+                                .apply();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
                 runOnUiThread(() -> {
                     if (responseCode == HttpURLConnection.HTTP_OK || responseCode == HttpURLConnection.HTTP_CREATED) {
                         Toast.makeText(this, "¡Cuenta creada exitosamente!", Toast.LENGTH_SHORT).show();
@@ -204,17 +220,15 @@ public class Registro extends AppCompatActivity {
             try {
                 double[] coordenadas = obtenerCoordenadasGoogle(usuario.getDireccion());
 
+                String userId = getSharedPreferences("session", MODE_PRIVATE)
+                        .getString("user_id", null);
 
-                URL url = new URL(SUPABASE_URL + "/rest/v1/Users");
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                conn.setRequestMethod("POST");
-                conn.setRequestProperty("Content-Type", "application/json");
-                conn.setRequestProperty("apikey", SUPABASE_KEY);
-                conn.setRequestProperty("Authorization", "Bearer " + SUPABASE_KEY);
-                conn.setRequestProperty("Prefer", "return=minimal");
-                conn.setDoOutput(true);
+                JSONObject json = new JSONObject(); // <-- Mueve esto antes de usar json.put()
 
-                JSONObject json = new JSONObject();
+                if (userId != null) {
+                    json.put("id", userId); // Asegúrate que tu tabla lo acepta como PK o FK
+                }
+
                 json.put("Nombre", usuario.getNombre());
                 json.put("Telefono", usuario.getTelefono());
                 json.put("Rol", "soyCuidador".equals(perfilSeleccionado) ? "Cuidador" : "Paciente");
@@ -224,6 +238,15 @@ public class Registro extends AppCompatActivity {
                     json.put("Latitud", coordenadas[0]);
                     json.put("Longitud", coordenadas[1]);
                 }
+
+                URL url = new URL(SUPABASE_URL + "/rest/v1/Users");
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("POST");
+                conn.setRequestProperty("Content-Type", "application/json");
+                conn.setRequestProperty("apikey", SUPABASE_KEY);
+                conn.setRequestProperty("Authorization", "Bearer " + SUPABASE_KEY);
+                conn.setRequestProperty("Prefer", "return=minimal");
+                conn.setDoOutput(true);
 
                 OutputStream os = conn.getOutputStream();
                 os.write(json.toString().getBytes());
@@ -246,6 +269,7 @@ public class Registro extends AppCompatActivity {
             }
         }).start();
     }
+
     private double[] obtenerCoordenadasGoogle(String direccion) {
         try {
             String query = URLEncoder.encode(direccion, "UTF-8");
