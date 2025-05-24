@@ -1,101 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/chat_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Chat">
-
-
-    <LinearLayout
-        android:id="@+id/topBar"
-        android:layout_width="0dp"
-        android:layout_height="60dp"
-        android:orientation="horizontal"
-        android:layout_marginTop="36dp"
-        android:padding="10dp"
-        android:gravity="center_vertical"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <ImageView
-            android:id="@+id/imgAtras"
-            android:layout_width="34dp"
-            android:layout_height="34dp"
-            android:src="@drawable/flecha"
-            />
-
-        <ImageView
-            android:id="@+id/usuarioImagen"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginStart="10dp"
-            android:scaleType="centerCrop"
-            android:background="@drawable/forma_circulo" />
-
-        <TextView
-            android:id="@+id/usuarioNombre"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:text=""
-            android:textSize="18sp"
-            android:textStyle="bold" />
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_weight="1" />
-
-        <ImageView
-            android:id="@+id/btnMenu"
-            android:src="@drawable/menu"
-            android:layout_width="34dp"
-            android:layout_height="34dp"/>
-    </LinearLayout>
+    android:orientation="vertical"
+    android:padding="8dp">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerMensajes"
-        android:layout_width="0dp"
+        android:id="@+id/chat_recycler"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:padding="8dp"
-        android:clipToPadding="false"
-        app:layout_constraintTop_toBottomOf="@id/topBar"
-        app:layout_constraintBottom_toTopOf="@id/messageBox"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:layout_weight="1"
+        android:scrollbars="vertical" />
 
     <LinearLayout
-        android:id="@+id/messageBox"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="10dp"
-        android:background="@color/principal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        android:paddingTop="4dp">
 
         <EditText
-            android:id="@+id/editTextMensaje"
+            android:id="@+id/message_input"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/fondo_transparente"
-            android:hint="@string/mensaje"
-            android:padding="10dp" />
+            android:hint="Escribe un mensaje..."
+            android:inputType="text" />
 
-        <ImageView
-            android:id="@+id/btnEnviar"
-            android:layout_width="34dp"
-            android:layout_height="34dp"
-            android:layout_marginStart="8dp"
-            android:src="@drawable/enviar"
-            android:layout_gravity="center_vertical"
-            />
+        <Button
+            android:id="@+id/send_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Enviar" />
     </LinearLayout>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId "com.synunezcamacho.cuidame"
-        minSdk 26
+        minSdk 28
         targetSdk 34
         versionCode 1
         versionName "1.0"
@@ -28,6 +28,9 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    buildFeatures {
+        viewBinding true
+    }
 }
 
 dependencies {
@@ -36,6 +39,9 @@ dependencies {
     implementation libs.material
     implementation libs.activity
     implementation libs.constraintlayout
+    implementation libs.car.ui.lib
+    implementation libs.navigation.fragment
+    implementation libs.navigation.ui
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
@@ -48,6 +54,15 @@ dependencies {
 
     implementation 'androidx.appcompat:appcompat:1.6.0'  // Para usar Toolbar y AppCompatActivity
     implementation 'com.google.android.material:material:1.9.0'  // Para Material Components (si usas Material Design)
+
+
+    implementation 'com.google.android.gms:play-services-maps:19.0.0'
+    implementation  'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation  'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation  'com.google.maps.android:android-maps-utils:2.2.5'
+    implementation 'com.google.android.gms:play-services-location:21.0.1'
+    implementation'com.squareup.okhttp3:okhttp:4.10.0'
+
 
 
 

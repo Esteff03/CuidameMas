@@ -21,6 +21,7 @@ import org.json.JSONObject;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.Scanner;
 
 import jp.wasabeef.glide.transformations.BlurTransformation;
@@ -32,6 +33,7 @@ public class Registro extends AppCompatActivity {
     // Supabase Auth
     private static final String SUPABASE_URL = "https://ieymwafslrvnvbneybgc.supabase.co";
     private static final String SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlleW13YWZzbHJ2bnZibmV5YmdjIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0NDcxNjgwMSwiZXhwIjoyMDYwMjkyODAxfQ.6O4seaPmMGH2hWm-ICUes5lVfNsKF8mWV0XVwY-9SYo";
+    private static final String GOOGLE_GEOCODING_API_KEY = "AIzaSyDDzubmOggWoNZguBTSnkug-U5y3AWicOE";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,9 +127,26 @@ public class Registro extends AppCompatActivity {
 
                 String responseStr = response.toString();
 
+                try {
+                    JSONObject jsonResponse = new JSONObject(responseStr);
+                    JSONObject user = jsonResponse.optJSONObject("user");
+                    if (user != null) {
+                        String userId = user.getString("id");
+
+                        // Guardar en SharedPreferences
+                        getSharedPreferences("session", MODE_PRIVATE)
+                                .edit()
+                                .putString("user_id", userId)
+                                .apply();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
                 runOnUiThread(() -> {
                     if (responseCode == HttpURLConnection.HTTP_OK || responseCode == HttpURLConnection.HTTP_CREATED) {
                         Toast.makeText(this, "¡Cuenta creada exitosamente!", Toast.LENGTH_SHORT).show();
+                        guardarDatosUsuarioEnTabla(usuario, perfilSeleccionado); // <--- Agregado aquí
                         Intent intent = new Intent(Registro.this, Perfil.class);
                         intent.putExtra("perfil", usuario);
                         startActivity(intent);
@@ -195,4 +214,94 @@ public class Registro extends AppCompatActivity {
             label.setVisibility(View.VISIBLE);
         }
     }
+
+    private void guardarDatosUsuarioEnTabla(Usuario usuario, String perfilSeleccionado) {
+        new Thread(() -> {
+            try {
+                double[] coordenadas = obtenerCoordenadasGoogle(usuario.getDireccion());
+
+                String userId = getSharedPreferences("session", MODE_PRIVATE)
+                        .getString("user_id", null);
+
+                JSONObject json = new JSONObject(); // <-- Mueve esto antes de usar json.put()
+
+                if (userId != null) {
+                    json.put("id", userId); // Asegúrate que tu tabla lo acepta como PK o FK
+                }
+
+                json.put("Nombre", usuario.getNombre());
+                json.put("Telefono", usuario.getTelefono());
+                json.put("Rol", "soyCuidador".equals(perfilSeleccionado) ? "Cuidador" : "Paciente");
+                json.put("Direccion", usuario.getDireccion());
+                json.put("Barrio", ""); // agregar si tienes
+                if (coordenadas != null) {
+                    json.put("Latitud", coordenadas[0]);
+                    json.put("Longitud", coordenadas[1]);
+                }
+
+                URL url = new URL(SUPABASE_URL + "/rest/v1/Users");
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("POST");
+                conn.setRequestProperty("Content-Type", "application/json");
+                conn.setRequestProperty("apikey", SUPABASE_KEY);
+                conn.setRequestProperty("Authorization", "Bearer " + SUPABASE_KEY);
+                conn.setRequestProperty("Prefer", "return=minimal");
+                conn.setDoOutput(true);
+
+                OutputStream os = conn.getOutputStream();
+                os.write(json.toString().getBytes());
+                os.close();
+
+                int responseCode = conn.getResponseCode();
+
+                runOnUiThread(() -> {
+                    if (responseCode == HttpURLConnection.HTTP_CREATED || responseCode == HttpURLConnection.HTTP_OK) {
+                        Toast.makeText(this, "Datos y coordenadas guardados correctamente", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(this, "Error al guardar datos en Users", Toast.LENGTH_LONG).show();
+                    }
+                });
+
+            } catch (Exception e) {
+                runOnUiThread(() -> {
+                    Toast.makeText(this, "Error al guardar coordenadas: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                });
+            }
+        }).start();
+    }
+
+    private double[] obtenerCoordenadasGoogle(String direccion) {
+        try {
+            String query = URLEncoder.encode(direccion, "UTF-8");
+            String urlStr = "https://maps.googleapis.com/maps/api/geocode/json?address=" + query + "&key=" + GOOGLE_GEOCODING_API_KEY;
+            URL url = new URL(urlStr);
+
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+
+            Scanner scanner = new Scanner(conn.getInputStream());
+            StringBuilder response = new StringBuilder();
+            while (scanner.hasNext()) {
+                response.append(scanner.nextLine());
+            }
+            scanner.close();
+
+            JSONObject json = new JSONObject(response.toString());
+            if ("OK".equals(json.getString("status"))) {
+                JSONObject location = json.getJSONArray("results")
+                        .getJSONObject(0)
+                        .getJSONObject("geometry")
+                        .getJSONObject("location");
+                double lat = location.getDouble("lat");
+                double lng = location.getDouble("lng");
+                return new double[]{lat, lng};
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null; // si falla
+    }
+
+
 }
+
