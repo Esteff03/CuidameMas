@@ -2,17 +2,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/page_home"
+        android:id="@+id/page_mapa"
         android:icon="@drawable/mapa"
         android:title="@string/mapa"
         />
     <item
-        android:id="@+id/page_fav"
+        android:id="@+id/page_chat"
         android:icon="@drawable/chat"
         android:title="@string/chat"
         />
     <item
-        android:id="@+id/page_search"
+        android:id="@+id/page_perfil"
         android:icon="@drawable/perfil"
         android:title="@string/perfil"
         />

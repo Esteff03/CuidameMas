@@ -2,10 +2,12 @@ package com.synunezcamacho.cuidame;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
@@ -13,11 +15,14 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 public class PerfilPublico extends AppCompatActivity {
-    Toolbar toolbar;
-    TextView txtNombre, txtFechaNacimiento, txtSexo, txtDireccion;
-    TextView txtSalario, txtExperiencia, txtReferencia, txtTipoTiempo, txtSobreMi;
-    ImageView imgAtras;
+    private Toolbar toolbar;
+    private TextView txtNombre, txtFechaNacimiento, txtSexo, txtDireccion;
+    private TextView txtSalario, txtExperiencia, txtReferencia, txtTipoTiempo, txtSobreMi;
+    private ImageView imgAtras;
+    private BottomNavigationView botonNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +34,10 @@ public class PerfilPublico extends AppCompatActivity {
         toolbar = findViewById(R.id.miToolbar);
         setSupportActionBar(toolbar);
         getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.principal));
+
+        //nav_menu
+        botonNavigationView = findViewById(R.id.bottom_navigation);
+        botonNavigationView.setSelectedItemId(R.id.page_perfil);
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -69,5 +78,19 @@ public class PerfilPublico extends AppCompatActivity {
 
         }
 
+        //actividad de nav_menu
+        botonNavigationView.setOnItemSelectedListener(item -> {
+            int id = item.getItemId();
+            if (id == R.id.page_chat) {
+                startActivity(new Intent(PerfilPublico.this, ChatActivity.class));
+                overridePendingTransition(0, 0);
+                return true;
+            } else if (id == R.id.page_mapa) {
+                startActivity(new Intent(PerfilPublico.this, Mapa.class));
+                overridePendingTransition(0, 0);
+                return true;
+            }
+            return true;
+        });
     }
 }

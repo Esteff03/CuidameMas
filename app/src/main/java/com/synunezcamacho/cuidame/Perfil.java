@@ -61,7 +61,6 @@ public class Perfil extends AppCompatActivity {
         edtSobreMi = findViewById(R.id.edtSobreMi);
         btnVerPerfilPublico = findViewById(R.id.btnVerPerfilPublico);
         BottomNavigationView nav_menu = findViewById(R.id.bottom_navigation);
-        nav_menu.setSelectedItemId(R.id.page_search);
 
         //cambio de texto buscoCudiador o SoyCuidador
         cambio1 = findViewById(R.id.cambio1);
@@ -129,31 +128,29 @@ public class Perfil extends AppCompatActivity {
         });
         configurarTextosPorPerfil(usuario);
 
- /*
-        //la parte del menu_nav
 
-        nav_menu.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+        //la parte del menu_nav
+        nav_menu.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.page_home:
-                        startActivity(new Intent(Perfil.this, MapaActivity.class));
-                        overridePendingTransition(0, 0);
-                        return true;
-
-                    case R.id.page_fav:
-                        startActivity(new Intent(Perfil.this, ChatActivity.class));
-                        overridePendingTransition(0, 0);
-                        return true;
-
-                    case R.id.page_search:
-                        // Ya estás en perfil
-                        return true;
+                int id = item.getItemId();
+                if (id == R.id.page_mapa) {
+                    Intent intent = new Intent(Perfil.this, Mapa.class);
+                    startActivity(intent);
+                    return true;
+                } else if (id == R.id.page_chat) {
+                    Intent intent = new Intent(Perfil.this, ChatActivity.class);
+                    startActivity(intent);
+                    return true;
+                } else if (id == R.id.page_perfil) {
+                    Intent intent = new Intent(Perfil.this, PerfilPublico.class);
+                    startActivity(intent);
+                    return true;
                 }
                 return false;
             }
         });
-*/
+
     }
 
 

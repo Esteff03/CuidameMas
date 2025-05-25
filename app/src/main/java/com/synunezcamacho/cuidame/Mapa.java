@@ -1,6 +1,7 @@
 package com.synunezcamacho.cuidame;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -19,6 +20,7 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.gms.maps.*;
 import com.google.android.gms.maps.model.*;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -44,6 +46,7 @@ public class Mapa extends FragmentActivity implements OnMapReadyCallback {
     private ArrayAdapter<String> listAdapter;
     private List<Usuarios> usuariosVisibles = new ArrayList<>();
     private OkHttpClient httpClient = new OkHttpClient();
+    private BottomNavigationView botonNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +55,11 @@ public class Mapa extends FragmentActivity implements OnMapReadyCallback {
 
         searchView = findViewById(R.id.searchView);
         listView = findViewById(R.id.listView);
+
+        //nav_menu
+        botonNavigationView = findViewById(R.id.bottom_navigation);
+        botonNavigationView.setSelectedItemId(R.id.page_mapa);
+
 
         SupportMapFragment mapFragment = (SupportMapFragment)
                 getSupportFragmentManager().findFragmentById(R.id.map);
@@ -72,6 +80,21 @@ public class Mapa extends FragmentActivity implements OnMapReadyCallback {
             } else {
                 Toast.makeText(this, "Por favor, escribe una dirección.", Toast.LENGTH_SHORT).show();
             }
+        });
+
+        //actividad del nav_menu
+        botonNavigationView.setOnItemSelectedListener(item -> {
+            int id = item.getItemId();
+            if (id == R.id.page_chat) {
+                startActivity(new Intent(Mapa.this, ChatActivity.class));
+                overridePendingTransition(0, 0);
+                return true;
+            } else if (id == R.id.page_perfil) {
+                startActivity(new Intent(Mapa.this, PerfilPublico.class));
+                overridePendingTransition(0, 0);
+                return true;
+            }
+            return true;
         });
     }
 
@@ -296,4 +319,6 @@ public class Mapa extends FragmentActivity implements OnMapReadyCallback {
             Toast.makeText(this, "Permiso de ubicación denegado", Toast.LENGTH_SHORT).show();
         }
     }
+
+
 }

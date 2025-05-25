@@ -21,7 +21,7 @@
             android:name=".ChatActivity"
             android:exported="true"
             android:theme="@style/Theme.Cuidame" />
-        <!-- Agrega tu API KEY aquí -->
+        <!-- API KEY -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCz7n8ZhRsqyf9FeMEaQicCH9wG2mXmzNM" />
