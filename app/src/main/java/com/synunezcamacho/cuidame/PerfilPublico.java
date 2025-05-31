@@ -82,15 +82,19 @@ public class PerfilPublico extends AppCompatActivity {
         botonNavigationView.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
             if (id == R.id.page_chat) {
-                startActivity(new Intent(PerfilPublico.this, ChatActivity.class));
+                startActivity(new Intent(PerfilPublico.this, Contacto.class));
                 overridePendingTransition(0, 0);
                 return true;
             } else if (id == R.id.page_mapa) {
                 startActivity(new Intent(PerfilPublico.this, Mapa.class));
                 overridePendingTransition(0, 0);
                 return true;
+            } else if (id == R.id.page_perfil) {
+                // Ya estamos en PerfilPublico, no hacemos nada
+                return true;
             }
-            return true;
+            return false;
         });
+
     }
 }

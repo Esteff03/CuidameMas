@@ -8,11 +8,13 @@ import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.Toast;
+import com.synunezcamacho.cuidame.Constants;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -47,7 +49,8 @@ public class Mapa extends FragmentActivity implements OnMapReadyCallback {
     private List<Usuarios> usuariosVisibles = new ArrayList<>();
     private OkHttpClient httpClient = new OkHttpClient();
     private BottomNavigationView botonNavigationView;
-
+    private Usuarios usuarioSeleccionado = null;
+    private Button btnChat;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +62,8 @@ public class Mapa extends FragmentActivity implements OnMapReadyCallback {
         //nav_menu
         botonNavigationView = findViewById(R.id.bottom_navigation);
         botonNavigationView.setSelectedItemId(R.id.page_mapa);
+        btnChat = findViewById(R.id.btnChat);
+        btnChat.setVisibility(View.GONE); // Ocultar al inicio
 
 
         SupportMapFragment mapFragment = (SupportMapFragment)
@@ -77,16 +82,18 @@ public class Mapa extends FragmentActivity implements OnMapReadyCallback {
             String direccion = searchView.getQuery().toString().trim();
             if (!direccion.isEmpty()) {
                 buscarCercanosPorCalle(direccion);
+                btnChat.setVisibility(View.VISIBLE); // Mostrar botón "Contactar"
             } else {
                 Toast.makeText(this, "Por favor, escribe una dirección.", Toast.LENGTH_SHORT).show();
             }
         });
 
+
         //actividad del nav_menu
         botonNavigationView.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
             if (id == R.id.page_chat) {
-                startActivity(new Intent(Mapa.this, ChatActivity.class));
+                startActivity(new Intent(Mapa.this, Contacto.class));
                 overridePendingTransition(0, 0);
                 return true;
             } else if (id == R.id.page_perfil) {
@@ -289,18 +296,32 @@ public class Mapa extends FragmentActivity implements OnMapReadyCallback {
         listAdapter.notifyDataSetChanged();
 
         listView.setOnItemClickListener((p, v, pos, id) -> {
-            Usuarios sel = usuariosVisibles.get(pos);
-            LatLng loc = new LatLng(sel.getLatitud(), sel.getLongitud());
+            usuarioSeleccionado = usuariosVisibles.get(pos);
+            LatLng loc = new LatLng(usuarioSeleccionado.getLatitud(), usuarioSeleccionado.getLongitud());
             googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, 14));
             new androidx.appcompat.app.AlertDialog.Builder(this)
-                    .setTitle("Usuario: " + sel.getNombre())
-                    .setMessage("Rol: " + sel.getRol()
-                            + "\nDirección: " + sel.getDireccion()
-                            + "\nBarrio: " + sel.getBarrio()
-                            + "\nTeléfono: " + sel.getTelefono())
+                    .setTitle("Usuario: " + usuarioSeleccionado.getNombre())
+                    .setMessage("Rol: " + usuarioSeleccionado.getRol()
+                            + "\nDirección: " + usuarioSeleccionado.getDireccion()
+                            + "\nBarrio: " + usuarioSeleccionado.getBarrio()
+                            + "\nTeléfono: " + usuarioSeleccionado.getTelefono())
                     .setPositiveButton("Aceptar", null)
                     .show();
         });
+
+        // Agrega esto dentro del método mostrarUsuariosEnMapa al final
+        btnChat.setOnClickListener(v -> {
+            if (usuarioSeleccionado != null) {
+                Intent intent = new Intent(Mapa.this, ChatActivity.class);
+                intent.putExtra(Constants.EXTRA_ID_CONTACTO, usuarioSeleccionado.getId());
+                intent.putExtra(Constants.EXTRA_NOMBRE_CONTACTO, usuarioSeleccionado.getNombre());
+                startActivity(intent);
+            } else {
+                Toast.makeText(Mapa.this, "Selecciona un usuario de la lista", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
     }
 
     @Override

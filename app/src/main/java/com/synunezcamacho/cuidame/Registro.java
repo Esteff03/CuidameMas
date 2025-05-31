@@ -177,6 +177,9 @@ public class Registro extends AppCompatActivity {
                     return "Correo ya registrado. Intenta iniciar sesión.";
                 case "invalid_password":
                     return "Contraseña no válida.";
+                case "signup_rate_limit_exceeded":
+                    return "Has alcanzado el límite de registros. Intenta más tarde.";
+
                 default:
                     return !msg.isEmpty() ? msg : "Error al crear cuenta.";
             }

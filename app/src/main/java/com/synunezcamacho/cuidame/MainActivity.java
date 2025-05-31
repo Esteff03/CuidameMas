@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(intent);
                     return true;
                 } else if (id == R.id.page_chat) {
-                    Intent intent = new Intent(MainActivity.this, ChatActivity.class);
+                    Intent intent = new Intent(MainActivity.this, Contacto.class);
                     startActivity(intent);
                     return true;
                 } else if (id == R.id.page_perfil) {

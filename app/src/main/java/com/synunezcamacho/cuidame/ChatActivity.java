@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import com.synunezcamacho.cuidame.Constants;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,6 +28,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class ChatActivity extends AppCompatActivity {
 
     private static final String SUPABASE_URL = "https://ieymwafslrvnvbneybgc.supabase.co";
@@ -38,15 +41,42 @@ public class ChatActivity extends AppCompatActivity {
     private ChatAdapter chatAdapter;
     private List<ChatMessage> messages = new ArrayList<>();
     private OkHttpClient client = new OkHttpClient();
+    private String idContacto;
+    private String nombreContacto;
+    private ImageView btnAtras;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chat);
 
+        super.onCreate(savedInstanceState);
+        Log.d("ChatActivity", "Intent extras: " + getIntent().getExtras());
+        setContentView(R.layout.activity_chat);
+        // Usa las claves constantes para obtener los extras
+        idContacto = getIntent().getStringExtra(Constants.EXTRA_ID_CONTACTO);
+        nombreContacto = getIntent().getStringExtra(Constants.EXTRA_NOMBRE_CONTACTO);
+
+
+        Log.d("ChatActivity", "idContacto recibido: " + idContacto);
+        Log.d("ChatActivity", "nombreContacto recibido: " + nombreContacto);
+
+        if (idContacto == null || idContacto.trim().isEmpty()) {
+            Log.e("ChatActivity", "idContacto es null o vacío");
+            finish(); // finaliza si no hay ID válido
+            return;
+        }
+
+
+        setTitle("Chat con " + nombreContacto);
         messageInput = findViewById(R.id.message_input);
         sendButton = findViewById(R.id.send_button);
         chatRecyclerView = findViewById(R.id.chat_recycler);
+        btnAtras = findViewById(R.id.imgAtras);
+
+        //boton para atras
+        btnAtras.setOnClickListener(v -> {
+            finish();
+        });
 
         chatAdapter = new ChatAdapter(messages, "AndroidUser");
 
@@ -108,6 +138,8 @@ public class ChatActivity extends AppCompatActivity {
                 try {
                     json.put("username", name);
                     json.put("content", content);
+                    json.put("contact_id", idContacto);
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -141,7 +173,8 @@ public class ChatActivity extends AppCompatActivity {
 
     private void fetchMessages() {
         Request request = new Request.Builder()
-                .url(SUPABASE_URL + "/rest/v1/messages?select=content,username,inserted_at")
+                .url(SUPABASE_URL + "/rest/v1/messages?select=content,username,inserted_at&contact_id=eq." + idContacto)
+
                 .addHeader("apikey", SUPABASE_API_KEY)
                 .addHeader("Authorization", "Bearer " + SUPABASE_API_KEY)
                 .build();
