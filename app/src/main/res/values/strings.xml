@@ -51,6 +51,7 @@
     <string name="previous">Previous</string>
     <string name ="guardar">guardar</string>
     <string name="chatTitulo">chatTitulo</string>
+    <string name="recuperarContraseña">¿Olvidaste la contraseña?</string>
     <string name="lorem_ipsum">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris
         volutpat, dolor id interdum ullamcorper, risus dolor egestas lectus, sit amet mattis purus

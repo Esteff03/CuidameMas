@@ -1,16 +1,15 @@
 package com.synunezcamacho.cuidame;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+
+import com.airbnb.lottie.LottieAnimationView;
 
 public class Splash extends AppCompatActivity {
 
@@ -21,7 +20,7 @@ public class Splash extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_splash);
-
+/*
         imagen = findViewById(R.id.logo);
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -53,6 +52,18 @@ public class Splash extends AppCompatActivity {
             }
         });
 
-        imagen.startAnimation(rotate);
+        imagen.startAnimation(rotate);*/
+
+        setContentView(R.layout.activity_splash); // tu layout con la animación
+
+        LottieAnimationView lottie = findViewById(R.id.lottie);
+        lottie.addAnimatorListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                // Ir a la siguiente actividad
+                startActivity(new Intent(Splash.this, Welcome.class));
+                finish();
+            }
+        });
     }
 }

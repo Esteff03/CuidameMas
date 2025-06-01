@@ -55,7 +55,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.6.0'  // Para usar Toolbar y AppCompatActivity
     implementation 'com.google.android.material:material:1.9.0'  // Para Material Components (si usas Material Design)
 
-
+    //Para el uso del mapa
     implementation 'com.google.android.gms:play-services-maps:19.0.0'
     implementation  'com.squareup.retrofit2:retrofit:2.9.0'
     implementation  'com.squareup.retrofit2:converter-gson:2.9.0'
@@ -64,6 +64,9 @@ dependencies {
     implementation'com.squareup.okhttp3:okhttp:4.10.0'
 
     implementation 'com.google.android.gms:play-services-maps:18.2.0'
+
+    //Para el splash
+    implementation 'com.airbnb.android:lottie:6.1.0'
 
 
 
