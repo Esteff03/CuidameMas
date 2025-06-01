@@ -13,7 +13,7 @@ import com.airbnb.lottie.LottieAnimationView;
 
 public class Splash extends AppCompatActivity {
 
-    ImageView imagen;
+    //ImageView imagen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
