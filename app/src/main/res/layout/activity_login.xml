@@ -12,11 +12,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
-        android:layout_alignParentTop="true"
-        android:contentDescription="@null"
-        />
+        android:contentDescription="@null" />
 
-    <!-- Guidelines para márgenes laterales -->
+
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline1"
         android:layout_width="wrap_content"
@@ -32,94 +30,63 @@
         app:layout_constraintGuide_percent="0.95" />
 
 
-    <TextView
-        android:id="@+id/Email"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/emailLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="312dp"
-        android:text="@string/emailTitulo"
-        android:textColor="@color/blanco"
-        android:textSize="32sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="@+id/guideline2"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/guideline1"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/email"
-        android:layout_width="0dp"
-        android:layout_height="51dp"
-        android:layout_marginTop="4dp"
-        android:alpha="0.9"
-        android:background="@drawable/rounded_edittext"
-        android:contentDescription="@null"
-        android:importantForAccessibility="no"
-        app:layout_constraintEnd_toEndOf="@+id/guideline2"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/guideline1"
-        app:layout_constraintTop_toBottomOf="@id/Email" />
-
-    <TextView
-        android:id="@+id/contraseña"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="52dp"
-        android:text="@string/password"
-        android:textColor="@color/blanco"
-        android:textSize="32sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="@+id/guideline2"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/guideline1"
-        app:layout_constraintTop_toBottomOf="@id/email" />
-
-
-    <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/password"
-        android:layout_width="0dp"
-        android:layout_height="51dp"
-        android:background="@drawable/rounded_edittext"
-        android:backgroundTint="#F7FFFFFF"
-        android:contentDescription="@null"
-        android:importantForAccessibility="no"
-        android:inputType="textPassword"
-        app:layout_constraintBottom_toTopOf="@+id/button1"
+        android:layout_marginTop="368dp"
+        android:hint="@string/emailTitulo"
         app:layout_constraintEnd_toEndOf="@id/guideline2"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@id/guideline1"
-        app:layout_constraintTop_toBottomOf="@+id/contraseña"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_edittext"
+            android:inputType="textEmailAddress" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/field1"
+        android:id="@+id/passwordLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
+        android:hint="@string/password"
+        app:passwordToggleEnabled="true"
+        android:layout_marginTop="24dp"
+        app:layout_constraintTop_toBottomOf="@id/emailLayout"
         app:layout_constraintStart_toStartOf="@id/guideline1"
-        app:layout_constraintEnd_toEndOf="@id/guideline2"/>
+        app:layout_constraintEnd_toEndOf="@id/guideline2">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/field2"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="@+id/guideline2"
-        app:layout_constraintStart_toStartOf="@+id/guideline1"
-        app:layout_constraintTop_toBottomOf="@id/password" />
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:background="@drawable/rounded_edittext" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-
-    <!-- Botón Iniciar sesión -->
     <Button
         android:id="@+id/button1"
-        android:layout_width="182dp"
-        android:layout_height="62dp"
-        android:layout_marginTop="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
         android:backgroundTint="@color/principal"
         android:text="@string/iniciarSesion"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/guideline2"
-        app:layout_constraintStart_toStartOf="@+id/guideline1"
-        app:layout_constraintTop_toBottomOf="@id/field2" />
-
+        android:textSize="18sp"
+        app:layout_constraintTop_toBottomOf="@id/passwordLayout"
+        app:layout_constraintStart_toStartOf="@id/guideline1"
+        app:layout_constraintEnd_toEndOf="@id/guideline2" />
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/principal"
+        android:text="@string/recuperarContraseña"
+        android:textSize="18sp"
+        app:layout_constraintTop_toBottomOf="@id/button1"
+        app:layout_constraintStart_toStartOf="@id/guideline1"
+        app:layout_constraintEnd_toEndOf="@id/guideline2" />
 </androidx.constraintlayout.widget.ConstraintLayout>
