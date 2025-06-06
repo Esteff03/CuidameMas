@@ -1,49 +1,31 @@
 package com.synunezcamacho.cuidame;
 
 public class Mensaje {
-
-    private String emisor;
-    private String receptor;
     private String contenido;
+    private String remitente_id;
+    private String enviado_en;
+    private String id;
     private String hora;
-
-    public Mensaje(){}
-    public Mensaje(String emisor, String receptor, String contenido, String hora) {
-        this.emisor = emisor;
-        this.receptor = receptor;
+    public Mensaje(String id, String contenido, String remitente_id, String enviado_en,String hora) {
+        this.id = id;
         this.contenido = contenido;
+        this.remitente_id = remitente_id;
+        this.enviado_en = enviado_en;
         this.hora = hora;
-    }
-
-    public String getEmisor() {
-        return emisor;
-    }
-
-    public void setEmisor(String emisor) {
-        this.emisor = emisor;
-    }
-
-    public String getReceptor() {
-        return receptor;
-    }
-
-    public void setReceptor(String receptos) {
-        this.receptor = receptos;
     }
 
     public String getContenido() {
         return contenido;
     }
 
-    public void setContenido(String contenido) {
-        this.contenido = contenido;
+    public String getRemitenteId() {
+        return remitente_id;
     }
 
-    public String getHora() {
+    public String getEnviadoEn() {
+        return enviado_en;
+    }
+    public String  getHora(){
         return hora;
-    }
-
-    public void setHora(String hora) {
-        this.hora = hora;
     }
 }

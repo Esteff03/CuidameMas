@@ -1,7 +1,9 @@
 package com.synunezcamacho.cuidame;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,31 +11,24 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+import java.util.Scanner;
 
 public class Contacto extends AppCompatActivity {
+
     private RecyclerView recyclerMensaje;
     private ContactoAdapter adapter;
     private List<ContactoPreview> listaContactos;
 
-    private OkHttpClient client = new OkHttpClient();
-
-    // Pon aquí tu URL y API KEY correctas de Supabase
+    // Supabase
     private static final String SUPABASE_URL = "https://ieymwafslrvnvbneybgc.supabase.co";
-    private static final String SUPABASE_API_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlleW13YWZzbHJ2bnZibmV5YmdjIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0NDcxNjgwMSwiZXhwIjoyMDYwMjkyODAxfQ.6O4seaPmMGH2hWm-ICUes5lVfNsKF8mWV0XVwY-9SYo";
+    private static final String SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlleW13YWZzbHJ2bnZibmV5YmdjIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0NDcxNjgwMSwiZXhwIjoyMDYwMjkyODAxfQ.6O4seaPmMGH2hWm-ICUes5lVfNsKF8mWV0XVwY-9SYo";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,66 +43,87 @@ public class Contacto extends AppCompatActivity {
         adapter = new ContactoAdapter(this, listaContactos);
         recyclerMensaje.setAdapter(adapter);
 
-        fetchContactosDesdeSupabase();
+        // Obtener user_id de SharedPreferences
+        SharedPreferences prefs = getSharedPreferences("session", MODE_PRIVATE);
+        String userId = prefs.getString("user_id", null);
+
+        if (userId != null) {
+            // Cargar mensajes para ese usuario
+            cargarMensajesDeUsuario(userId);
+        } else {
+            Toast.makeText(this, "No se encontró sesión activa", Toast.LENGTH_SHORT).show();
+        }
     }
 
-    private void fetchContactosDesdeSupabase() {
-        // Consulta para obtener todos los mensajes ordenados por fecha ascendente (puedes cambiar a desc si quieres)
-        String url = SUPABASE_URL + "/rest/v1/messages?select=contact_id,username,content,inserted_at&order=inserted_at.asc";
+    private void cargarMensajesDeUsuario(String userId) {
+        Log.d("Contacto", "User ID para consulta: " + userId);
+        new Thread(() -> {
+            try {
+                // Endpoint para obtener mensajes filtrados por contact_id = userId
+                // Aquí se asume que el nombre de la tabla en supabase es "messages"
+                // y que quieres los últimos mensajes ordenados por insert_at desc
 
-        Request request = new Request.Builder()
-                .url(url)
-                .addHeader("apikey", SUPABASE_API_KEY)
-                .addHeader("Authorization", "Bearer " + SUPABASE_API_KEY)
-                .build();
+                String urlStr = SUPABASE_URL + "/rest/v1/messages?contact_id=eq." + userId + "&select=*,username&order=insert_at.desc";
+                URL url = new URL(urlStr);
 
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                Log.e("SUPABASE", "Error al obtener contactos", e);
-            }
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("GET");
+                conn.setRequestProperty("apikey", SUPABASE_KEY);
+                conn.setRequestProperty("Authorization", "Bearer " + SUPABASE_KEY);
+                conn.setRequestProperty("Accept", "application/json");
 
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                if (!response.isSuccessful()) {
-                    Log.e("SUPABASE", "Respuesta no exitosa: " + response.code());
-                    return;
-                }
+                int responseCode = conn.getResponseCode();
 
-                String body = response.body().string();
-
-                try {
-                    JSONArray jsonArray = new JSONArray(body);
-
-                    // Usamos un map para mantener solo el último mensaje por contacto
-                    Map<String, ContactoPreview> mapContactos = new HashMap<>();
-
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        JSONObject obj = jsonArray.getJSONObject(i);
-
-                        String idContacto = obj.getString("contact_id");
-                        String nombre = obj.getString("username");
-                        String ultimoMensaje = obj.getString("content");
-                        String hora = obj.getString("inserted_at");
-
-                        // Para imagen, puedes usar una fija o mejorar asignando según contacto
-                        int imagenPerfil = R.drawable.camara;
-
-                        // Si el contacto no existe o el mensaje es más reciente, actualizamos
-                        if (!mapContactos.containsKey(idContacto) || mapContactos.get(idContacto).getHora().compareTo(hora) < 0) {
-                            mapContactos.put(idContacto, new ContactoPreview(idContacto, nombre, ultimoMensaje, hora, imagenPerfil));
-                        }
+                if (responseCode == HttpURLConnection.HTTP_OK) {
+                    InputStream is = conn.getInputStream();
+                    Scanner scanner = new Scanner(is);
+                    StringBuilder response = new StringBuilder();
+                    while (scanner.hasNext()) {
+                        response.append(scanner.nextLine());
                     }
+                    scanner.close();
+
+                    JSONArray jsonArray = new JSONArray(response.toString());
 
                     listaContactos.clear();
-                    listaContactos.addAll(mapContactos.values());
 
-                    runOnUiThread(() -> adapter.notifyDataSetChanged());
+                    // Para evitar mostrar mensajes duplicados del mismo contacto,
+                    // podemos usar un Map o HashSet para filtrar contactos únicos,
+                    // pero por simplicidad agregamos todos aquí
 
-                } catch (JSONException e) {
-                    Log.e("SUPABASE", "Error parseando JSON", e);
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject mensaje = jsonArray.getJSONObject(i);
+                        String idContacto = mensaje.getString("contact_id");
+                        String nombreUsuario = mensaje.getString("username");
+                        String ultimoMensaje = mensaje.getString("content");
+                        String hora = mensaje.getString("insert_at"); // aquí podrías formatear la fecha/hora
+
+                        // Como no tienes imagen real, usa tu drawable por defecto
+                        int imagenPerfil = R.drawable.camara;
+
+                        ContactoPreview contacto = new ContactoPreview(idContacto, nombreUsuario, ultimoMensaje, hora, imagenPerfil);
+                        listaContactos.add(contacto);
+                    }
+
+                    runOnUiThread(() -> {
+                        adapter.notifyDataSetChanged();
+                    });
+
+                } else {
+                    Scanner scanner = new Scanner(conn.getErrorStream());
+                    StringBuilder errorResponse = new StringBuilder();
+                    while (scanner.hasNext()) {
+                        errorResponse.append(scanner.nextLine());
+                    }
+                    scanner.close();
+                    Log.e("Supabase", "Error HTTP: " + responseCode);
+                    Log.e("Supabase", "Error response: " + errorResponse.toString());
+                    runOnUiThread(() -> Toast.makeText(this, "Error al cargar mensajes", Toast.LENGTH_SHORT).show());
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
+                runOnUiThread(() -> Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_LONG).show());
             }
-        });
+        }).start();
     }
 }

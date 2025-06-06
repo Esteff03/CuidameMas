@@ -1,80 +1,81 @@
 package com.synunezcamacho.cuidame;
 
 
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
-public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder> {
 
-    private static final int TYPE_ME = 1;
-    private static final int TYPE_OTHER = 2;
+    private List<Mensaje> mensajeList;
+    private String usuarioActual;
 
-    private List<ChatMessage> messages;
-    private String currentUsername;
-
-    public ChatAdapter(List<ChatMessage> messages, String currentUsername) {
-        this.messages = messages;
-        this.currentUsername = currentUsername;
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-        return messages.get(position).username.equals(currentUsername) ? TYPE_ME : TYPE_OTHER;
+    public ChatAdapter(List<Mensaje> mensajeList, String usuarioActual) {
+        this.mensajeList = mensajeList;
+        this.usuarioActual = usuarioActual;
     }
 
     @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        if (viewType == TYPE_ME) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.chat_item_right, parent, false);
-            return new MeViewHolder(view);
-        } else {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.chat_item_left, parent, false);
-            return new OtherViewHolder(view);
-        }
+    public ChatViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.item_mensaje, parent, false);
+        return new ChatViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        ChatMessage msg = messages.get(position);
-        if (holder instanceof MeViewHolder) {
-            ((MeViewHolder) holder).message.setText(msg.content);
-            ((MeViewHolder) holder).timestamp.setText(msg.insertedAt);
-        } else if (holder instanceof OtherViewHolder) {
-            ((OtherViewHolder) holder).username.setText(msg.username);
-            ((OtherViewHolder) holder).message.setText(msg.content);
-            ((OtherViewHolder) holder).timestamp.setText(msg.insertedAt);
-        }
+    public void onBindViewHolder(@NonNull ChatViewHolder holder, int position) {
+        Mensaje mensaje = mensajeList.get(position);
+        holder.bind(mensaje, usuarioActual);
     }
 
     @Override
     public int getItemCount() {
-        return messages.size();
+        return mensajeList.size();
     }
 
-    static class MeViewHolder extends RecyclerView.ViewHolder {
-        TextView message, timestamp;
+    static class ChatViewHolder extends RecyclerView.ViewHolder {
+        TextView textoMensaje, textoHora;
+        LinearLayout burbujaLayout;
+        LinearLayout containerMensaje;
 
-        MeViewHolder(@NonNull View itemView) {
+        public ChatViewHolder(@NonNull View itemView) {
             super(itemView);
-            message = itemView.findViewById(R.id.message_text);
-            timestamp = itemView.findViewById(R.id.timestamp_text);
+            textoMensaje = itemView.findViewById(R.id.textoMensaje);
+            textoHora = itemView.findViewById(R.id.textoHora);
+            burbujaLayout = itemView.findViewById(R.id.burbujaLayout);
+            containerMensaje = itemView.findViewById(R.id.containerMensaje);
         }
-    }
 
-    static class OtherViewHolder extends RecyclerView.ViewHolder {
-        TextView username, message, timestamp;
+        public void bind(Mensaje mensaje, String usuarioActual) {
+            textoMensaje.setText(mensaje.getContenido());
 
-        OtherViewHolder(@NonNull View itemView) {
-            super(itemView);
-            username = itemView.findViewById(R.id.username_text);
-            message = itemView.findViewById(R.id.message_text);
-            timestamp = itemView.findViewById(R.id.timestamp_text);
+            // Extrae la hora usando getter getEnviadoEn()
+            String enviadoEn = mensaje.getEnviadoEn();
+            String hora = enviadoEn.length() >= 16 ? enviadoEn.substring(11, 16) : "";
+            textoHora.setText(hora);
+
+            // Ajusta la burbuja según el remitente, usando getter getRemitenteId()
+            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) burbujaLayout.getLayoutParams();
+
+            if (mensaje.getRemitenteId().equals(usuarioActual)) {
+                burbujaLayout.setBackgroundResource(R.drawable.bg_burbuja_derecha);
+                params.gravity = Gravity.END;
+                containerMensaje.setGravity(Gravity.END);
+            } else {
+                burbujaLayout.setBackgroundResource(R.drawable.bg_burbuja_izquierda);
+                params.gravity = Gravity.START;
+                containerMensaje.setGravity(Gravity.START);
+            }
+
+            burbujaLayout.setLayoutParams(params);
         }
     }
 }
+

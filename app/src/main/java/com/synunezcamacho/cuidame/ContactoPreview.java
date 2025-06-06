@@ -19,6 +19,9 @@ public class ContactoPreview {
     public String getNombreUsuario() {
         return nombreUsuario;
     }
+    public void setNombreUsuario(String nombreUsuario) {
+        this.nombreUsuario = nombreUsuario;
+    }
     public String getUltimoMensaje() {
         return ultimoMensaje;
     }
