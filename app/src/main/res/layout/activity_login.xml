@@ -86,7 +86,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:backgroundTint="@color/principal"
-        android:text="@string/recuperarContraseña"
+        android:text="@string/recuperarContrasenia"
         android:textSize="18sp"
         app:layout_constraintTop_toBottomOf="@id/button1"
         app:layout_constraintStart_toStartOf="@id/guideline1"

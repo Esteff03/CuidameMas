@@ -44,6 +44,7 @@
     <string name="referencias">Referencias</string>
     <string name="Tipo_de_tiempo">Tipo de tiempo</string>
     <string name="sobre_mi">Sobre mi</string>
+    <string name="recuperarContrasenia">¿Olvidaste la constraseña?</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>

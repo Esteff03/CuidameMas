@@ -83,6 +83,10 @@ public class Registro extends AppCompatActivity {
                 Toast.makeText(this, "Correo no válido", Toast.LENGTH_SHORT).show();
                 return null;
             }
+            if (!validaTelefono(usuario.getTelefono())){
+                Toast.makeText(this, "Telefono no válido", Toast.LENGTH_SHORT).show();
+                return null;
+            }
             return usuario;
         } else {
             verificarCampo(edtNombre, findViewById(R.id.asteriscoNombre), findViewById(R.id.invisibleNombre));
@@ -217,7 +221,15 @@ public class Registro extends AppCompatActivity {
             label.setVisibility(View.VISIBLE);
         }
     }
+    private boolean validaTelefono(String telefono){
+        telefono = edtTelefono.getText().toString().trim();
+        String patronMovilEspaña = "^[67]\\d{8}$";
 
+        if (telefono.matches(patronMovilEspaña)) {
+            return true;
+        }
+        return false;
+    }
     private void guardarDatosUsuarioEnTabla(Usuario usuario, String perfilSeleccionado) {
         new Thread(() -> {
             try {
