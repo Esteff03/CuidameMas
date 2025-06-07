@@ -1,6 +1,8 @@
 package com.synunezcamacho.cuidame;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.ImageView;
@@ -17,11 +19,14 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class PerfilPublico extends AppCompatActivity {
     private Toolbar toolbar;
     private TextView txtNombre, txtFechaNacimiento, txtSexo, txtDireccion;
     private TextView txtSalario, txtExperiencia, txtReferencia, txtTipoTiempo, txtSobreMi;
     private ImageView imgAtras;
+    private CircleImageView imgPerfil;
     private BottomNavigationView botonNavigationView;
 
     @Override
@@ -45,6 +50,7 @@ public class PerfilPublico extends AppCompatActivity {
             return insets;
         });
 
+        imgPerfil = findViewById(R.id. imgPerfil);
         txtNombre = findViewById(R.id.txtNombre);
         txtFechaNacimiento = findViewById(R.id.txtFechaNacimiento);
         txtSexo = findViewById(R.id.txtSexo);
@@ -77,6 +83,8 @@ public class PerfilPublico extends AppCompatActivity {
             txtSobreMi.setText("Sobre Mi: " + usuario.getSobremi());
 
         }
+
+        //visualizacion de la imagen
 
         //actividad de nav_menu
         botonNavigationView.setOnItemSelectedListener(item -> {

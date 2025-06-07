@@ -2,7 +2,9 @@ package com.synunezcamacho.cuidame;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -29,6 +31,8 @@ import com.google.android.material.navigation.NavigationBarView;
 
 import java.util.Calendar;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class Perfil extends AppCompatActivity {
     Spinner spinnerTipoTiempo, spinnerExperiencia;
     Toolbar toolbar;
@@ -38,14 +42,18 @@ public class Perfil extends AppCompatActivity {
     RadioGroup sexoGroup;
     RadioButton rbMuje, rbHombre;
     CheckBox checkBoxReferencia;
-    Button btnVerPerfilPublico;
+    Button btnVerPerfilPublico, btnGuardar;
     TextView cambio1, cambio2,cambio3, cambio4;
+    CircleImageView imgPerfil;
+    private static final int PICK_IMAGE_REQUEST = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_perfil);
+
+        imgPerfil = findViewById(R.id.imgPerfil);
 
         edtNombre = findViewById(R.id.edtNombre);
         edtDireccion = findViewById(R.id.edtDireccion);
@@ -60,6 +68,7 @@ public class Perfil extends AppCompatActivity {
         checkBoxReferencia = findViewById(R.id.checkBoxReferencia);
         edtSobreMi = findViewById(R.id.edtSobreMi);
         btnVerPerfilPublico = findViewById(R.id.btnVerPerfilPublico);
+        btnGuardar = findViewById(R.id.btnGuardar);
         BottomNavigationView nav_menu = findViewById(R.id.bottom_navigation);
 
         //cambio de texto buscoCudiador o SoyCuidador
@@ -80,6 +89,9 @@ public class Perfil extends AppCompatActivity {
             return insets;
         });
 
+        //Galeria
+        imgPerfil.setOnClickListener(v -> abrirGaleria());
+
         //configuracion del Spinner
         configuracionSpinner(spinnerTipoTiempo, new String[]{"Por Horas", "Internas"});
         configuracionSpinner(spinnerExperiencia, new String[]{"Sin experiencia", "1-2 años", "3+ años"});
@@ -91,6 +103,11 @@ public class Perfil extends AppCompatActivity {
         edtDireccion.setText(usuario.getDireccion());
 
         //Fecha de Nacimiento Formato Calendario
+        String fechaNacimiento = usuario.getFechaNacimiento();
+        if (fechaNacimiento == null || fechaNacimiento.isEmpty()) {
+            usuario.setFechaNacimiento("No definida");
+        }
+
         edtFechaNacimiento.setOnClickListener(v -> {
             final Calendar calendario = Calendar.getInstance();
             int dia = calendario.get(Calendar.DAY_OF_MONTH);
@@ -128,6 +145,9 @@ public class Perfil extends AppCompatActivity {
         });
         configurarTextosPorPerfil(usuario);
 
+        //boton para guardar
+        //btnGuardar.setOnClickListener(v->);
+
 
         //la parte del menu_nav
         nav_menu.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -152,7 +172,21 @@ public class Perfil extends AppCompatActivity {
         });
 
     }
-
+    private void abrirGaleria() {
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        intent.setType("image/*");
+        startActivityForResult(intent, PICK_IMAGE_REQUEST);
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null) {
+            Uri imagenSeleccionada = data.getData();
+            if (imagenSeleccionada != null) {
+                imgPerfil.setImageURI(imagenSeleccionada);
+            }
+        }
+    }
 
     private void configuracionSpinner(Spinner spinner, String[] opciones) {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
@@ -175,28 +209,34 @@ public class Perfil extends AppCompatActivity {
         usuario.setGenero(generoSeleccionado);
     }
 
-    private boolean salarioValidar(Usuario usuario){
-        String salarioDesdeText = salarioDesde.getText().toString();
-        String salarioHastaText = salarioHasta.getText().toString();
-        double salarioDesdeValor = Double.parseDouble(salarioDesdeText);
-        double salarioHastaValor = Double.parseDouble(salarioHastaText);
+    private boolean salarioValidar(Usuario usuario) {
+        String salarioDesdeText = salarioDesde.getText().toString().trim();
+        String salarioHastaText = salarioHasta.getText().toString().trim();
 
-        try{
-
-            if (salarioHastaValor < salarioDesdeValor) {
-                Toast.makeText(Perfil.this, "El salario Incorrecto", Toast.LENGTH_SHORT).show();
-                return false;
-            } else {
-                usuario.setSalarioDesde(salarioDesdeText);
-                usuario.setSalarioHasta(salarioHastaText);
-                return true;
-            }
-        }catch (NumberFormatException e){
-            Toast.makeText(this, "Introduce números válidos en el salario", Toast.LENGTH_SHORT).show();
+        if (salarioDesdeText.isEmpty() || salarioHastaText.isEmpty()) {
+            Toast.makeText(this, "Debes ingresar ambos valores de salario", Toast.LENGTH_SHORT).show();
             return false;
         }
 
+        try {
+            double salarioDesdeValor = Double.parseDouble(salarioDesdeText);
+            double salarioHastaValor = Double.parseDouble(salarioHastaText);
+
+            if (salarioHastaValor < salarioDesdeValor) {
+                Toast.makeText(this, "El salario Incorrecto", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+
+            usuario.setSalarioDesde(salarioDesdeText);
+            usuario.setSalarioHasta(salarioHastaText);
+            return true;
+
+        } catch (NumberFormatException e) {
+            Toast.makeText(this, "Introduce números válidos en el salario", Toast.LENGTH_SHORT).show();
+            return false;
+        }
     }
+
 
     private void spinnersUsuario(Usuario usuario) {
         String tipoTiempoSeleccionado = spinnerTipoTiempo.getSelectedItem().toString();

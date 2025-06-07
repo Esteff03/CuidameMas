@@ -59,16 +59,15 @@
             android:textAlignment="center"
             android:textSize="36sp" />
 
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/imgPerfil"
             android:layout_width="72dp"
             android:layout_height="72dp"
             android:layout_gravity="center"
             android:layout_marginTop="16dp"
-            android:background="@drawable/forma_circulo"
-            android:contentDescription="@string/descripcionImagen"
-            android:padding="16dp"
-            android:src="@drawable/camara" />
+            android:src="@drawable/camara"
+            android:contentDescription="@string/descripcionImagen" />
+
 
         <EditText
             android:id="@+id/edtNombre"
@@ -323,6 +322,7 @@
             android:autofillHints="sobremi"
             android:background="@drawable/circulo_texto"
             android:inputType=""
+            android:textAlignment="center"
             android:minLines="3" />
 
         <LinearLayout
