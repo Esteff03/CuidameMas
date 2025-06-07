@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="#FFFFFF"
-        android:background="@drawable/bg_bubble_right"
+        android:background="@drawable/bg_burbuja_derecha"
         android:padding="10dp"
         android:textSize="16sp"
         android:maxWidth="250dp"  />
