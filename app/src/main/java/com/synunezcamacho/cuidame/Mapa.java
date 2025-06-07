@@ -2,6 +2,7 @@ package com.synunezcamacho.cuidame;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 import com.synunezcamacho.cuidame.Constants;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
@@ -28,14 +30,22 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-public class Mapa extends FragmentActivity implements OnMapReadyCallback {
+
+public class Mapa extends AppCompatActivity implements OnMapReadyCallback {
+
+
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     private static final String GEOCODING_API_KEY = "AIzaSyDDzubmOggWoNZguBTSnkug-U5y3AWicOE";
@@ -51,13 +61,25 @@ public class Mapa extends FragmentActivity implements OnMapReadyCallback {
     private BottomNavigationView botonNavigationView;
     private Usuarios usuarioSeleccionado = null;
     private Button btnChat;
+    private String uidDestinatario = null;
+
+    private SharedPreferences prefs;
+    private String tuUsuarioActualId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mapa);
 
-        searchView = findViewById(R.id.searchView);
+
         listView = findViewById(R.id.listView);
+
+        searchView = findViewById(R.id.searchView);
+        String emailDestinatario = getIntent().getStringExtra("email_destinatario");
+
+        if (emailDestinatario != null && !emailDestinatario.isEmpty()) {
+            obtenerUidDesdeEmail(emailDestinatario);
+        }
+
 
         //nav_menu
         botonNavigationView = findViewById(R.id.bottom_navigation);
@@ -65,6 +87,17 @@ public class Mapa extends FragmentActivity implements OnMapReadyCallback {
         btnChat = findViewById(R.id.btnChat);
         btnChat.setVisibility(View.GONE); // Ocultar al inicio
 
+        SearchView searchView = findViewById(R.id.searchView);
+        searchView.setQueryHint("Introduce una dirección:");
+
+
+         tuUsuarioActualId  = getSharedPreferences("session", MODE_PRIVATE).getString("user_id", null);
+        if (tuUsuarioActualId  != null) {
+            // Puedes usar el uid_actual para hacer consultas o lo que necesites
+            Log.d("MAPA", "UID Actual: " + tuUsuarioActualId );
+        } else {
+            Log.d("MAPA", "No hay UID guardado");
+        }
 
         SupportMapFragment mapFragment = (SupportMapFragment)
                 getSupportFragmentManager().findFragmentById(R.id.map);
@@ -104,6 +137,20 @@ public class Mapa extends FragmentActivity implements OnMapReadyCallback {
             return true;
         });
     }
+
+
+    private void guardarEnPrefs(String clave, String valor) {
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(clave, valor);
+        editor.apply();
+    }
+
+
+
+    private String obtenerDePrefs(String clave) {
+        return prefs.getString(clave, null);
+    }
+
 
     private void configurarBuscador() {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -253,6 +300,7 @@ public class Mapa extends FragmentActivity implements OnMapReadyCallback {
                             u.setTelefono(obj.optString("Telefono", ""));
                             u.setDireccion(obj.optString("Direccion", ""));
                             u.setBarrio(obj.optString("Barrio", ""));
+
                             u.setRol(obj.optString("Rol", ""));
                             u.setLatitud(lat);
                             u.setLongitud(lng);
@@ -274,6 +322,9 @@ public class Mapa extends FragmentActivity implements OnMapReadyCallback {
         listAdapter.clear();
         usuariosVisibles.clear();
 
+        btnChat.setVisibility(View.GONE); // Ocultar por defecto
+        usuarioSeleccionado = null;
+
         for (Usuarios u : lista) {
             LatLng loc = new LatLng(u.getLatitud(), u.getLongitud());
 
@@ -287,7 +338,6 @@ public class Mapa extends FragmentActivity implements OnMapReadyCallback {
 
             listAdapter.add(u.getNombre() + " - " + u.getRol()
                     + "\n" + u.getDireccion()
-                    + "\nBarrio: " + u.getBarrio()
                     + "\nTel: " + u.getTelefono());
 
             usuariosVisibles.add(u);
@@ -299,17 +349,33 @@ public class Mapa extends FragmentActivity implements OnMapReadyCallback {
             usuarioSeleccionado = usuariosVisibles.get(pos);
             LatLng loc = new LatLng(usuarioSeleccionado.getLatitud(), usuarioSeleccionado.getLongitud());
             googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, 14));
+
+            // Mostrar datos del usuario
             new androidx.appcompat.app.AlertDialog.Builder(this)
-                    .setTitle("Usuario: " + usuarioSeleccionado.getNombre())
-                    .setMessage("Rol: " + usuarioSeleccionado.getRol()
+                    .setTitle("Usuario seleccionado")
+                    .setMessage("Nombre: " + usuarioSeleccionado.getNombre()
+                            + "\nRol: " + usuarioSeleccionado.getRol()
                             + "\nDirección: " + usuarioSeleccionado.getDireccion()
-                            + "\nBarrio: " + usuarioSeleccionado.getBarrio()
                             + "\nTeléfono: " + usuarioSeleccionado.getTelefono())
-                    .setPositiveButton("Aceptar", null)
+                    .setPositiveButton("Contactar", (dialog, which) -> {
+                        if (usuarioSeleccionado == null) {
+                            Toast.makeText(Mapa.this, "Selecciona un usuario primero", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                        // Usa uidDestinatario si existe, sino usa el id del usuario seleccionado
+                        String uidAUsar = (uidDestinatario != null) ? uidDestinatario : usuarioSeleccionado.getId();
+
+                        Intent intent = new Intent(Mapa.this, ChatActivity.class);
+                        intent.putExtra(Constants.EXTRA_ID_CONTACTO, usuarioSeleccionado.getId());
+                        intent.putExtra(Constants.EXTRA_NOMBRE_CONTACTO, usuarioSeleccionado.getNombre());
+                        intent.putExtra("UUID_ACTUAL", tuUsuarioActualId); // ID del usuario actual
+                        intent.putExtra("UUID_DESTINATARIO", uidDestinatario != null ? uidDestinatario : usuarioSeleccionado.getId()); // Usa UID obtenido o fallback
+                        startActivity(intent);
+                    })
                     .show();
         });
 
-        // Agrega esto dentro del método mostrarUsuariosEnMapa al final
         btnChat.setOnClickListener(v -> {
             if (usuarioSeleccionado != null) {
                 Intent intent = new Intent(Mapa.this, ChatActivity.class);
@@ -317,29 +383,58 @@ public class Mapa extends FragmentActivity implements OnMapReadyCallback {
                 intent.putExtra(Constants.EXTRA_NOMBRE_CONTACTO, usuarioSeleccionado.getNombre());
                 startActivity(intent);
             } else {
-                Toast.makeText(Mapa.this, "Selecciona un usuario de la lista", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Mapa.this, "Selecciona un usuario primero", Toast.LENGTH_SHORT).show();
             }
         });
-
-
     }
 
-    @Override
-    public void onRequestPermissionsResult(
-            int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults
-    ) {
-        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE
-                && grantResults.length > 0
-                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.checkSelfPermission(this,
-                    Manifest.permission.ACCESS_FINE_LOCATION)
-                    == PackageManager.PERMISSION_GRANTED) {
-                googleMap.setMyLocationEnabled(true);
+    private void obtenerUidDesdeEmail(String email) {
+        new Thread(() -> {
+            try {
+                String urlString = SUPABASE_URL + "/rest/v1/rpc/get_user_id_by_email";
+                URL url = new URL(urlString);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("POST");
+                conn.setRequestProperty("apikey", SUPABASE_API_KEY);
+                conn.setRequestProperty("Authorization", "Bearer " + SUPABASE_API_KEY);
+                conn.setRequestProperty("Content-Type", "application/json");
+                conn.setRequestProperty("Accept", "application/json");
+                conn.setDoOutput(true);
+
+                // JSON con el parámetro de la función
+                String jsonInputString = "{\"p_email\": \"" + email + "\"}";
+
+                try(OutputStream os = conn.getOutputStream()) {
+                    byte[] input = jsonInputString.getBytes("utf-8");
+                    os.write(input, 0, input.length);
+                }
+
+                int responseCode = conn.getResponseCode();
+                if (responseCode == HttpURLConnection.HTTP_OK) {
+                    Scanner scanner = new Scanner(conn.getInputStream());
+                    StringBuilder response = new StringBuilder();
+                    while (scanner.hasNext()) {
+                        response.append(scanner.nextLine());
+                    }
+                    scanner.close();
+
+                    // La respuesta será algo como: "uuid" (un string simple)
+                    String uid = response.toString().replace("\"", ""); // quita comillas
+
+                    runOnUiThread(() -> {
+                        uidDestinatario = uid;  // Guardar UID global
+                        Toast.makeText(Mapa.this, "UID Destinatario: " + uidDestinatario, Toast.LENGTH_LONG).show();
+                    });
+                } else {
+                    runOnUiThread(() -> Toast.makeText(Mapa.this, "Error en consulta: " + responseCode, Toast.LENGTH_LONG).show());
+                }
+            } catch (Exception e) {
+                runOnUiThread(() -> Toast.makeText(Mapa.this, "Error: " + e.getMessage(), Toast.LENGTH_LONG).show());
             }
-        } else {
-            Toast.makeText(this, "Permiso de ubicación denegado", Toast.LENGTH_SHORT).show();
-        }
+        }).start();
     }
+
+
 
 
 }

@@ -1,6 +1,9 @@
 package com.synunezcamacho.cuidame;
 
-import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Looper;
+import android.util.Log;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -8,9 +11,12 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class SupabaseService {
 
@@ -19,166 +25,91 @@ public class SupabaseService {
         void onError(String error);
     }
 
-    public static void obtenerOcrearChat(String supabaseUrl, String apiKey, String usuarioActualId, String usuarioOtroId, Callback callback) {
-        new AsyncTask<Void, Void, String>() {
-            protected String doInBackground(Void... voids) {
-                try {
-                    String urlStr = supabaseUrl + "/rest/v1/chats?select=*&or=(usuario1_id.eq." + usuarioActualId + ",usuario2_id.eq." + usuarioOtroId + ")";
-                    URL url = new URL(urlStr);
-                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                    conn.setRequestMethod("GET");
-                    conn.setRequestProperty("apikey", apiKey);
-                    conn.setRequestProperty("Authorization", "Bearer " + apiKey);
-                    conn.setRequestProperty("Content-Type", "application/json");
+    // Insertar mensaje en tabla chat
+    public static void enviarMensajeEnChat(String supabaseUrl, String apiKey,
+                                           String remitenteId, String destinatarioId,
+                                           String contenido, Callback callback) {
+        // Endpoint para insertar en tabla "chat"
+        String url = supabaseUrl + "/rest/v1/messages";
 
-                    int responseCode = conn.getResponseCode();
-                    if (responseCode == 200) {
-                        BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                        String inputLine;
-                        StringBuilder response = new StringBuilder();
-                        while ((inputLine = in.readLine()) != null) {
-                            response.append(inputLine);
-                        }
-                        in.close();
+        JSONObject jsonBody = new JSONObject();
+        try {
+            jsonBody.put("remitente_id", remitenteId);
+            jsonBody.put("destinatario_id", destinatarioId);
+            jsonBody.put("contenido", contenido);
+            jsonBody.put("enviado_en", System.currentTimeMillis()); // timestamp o usa formato ISO
 
-                        JSONArray chats = new JSONArray(response.toString());
-                        if (chats.length() > 0) {
-                            JSONObject chat = chats.getJSONObject(0);
-                            return chat.getString("id");
-                        } else {
-                            // Crear nuevo chat
-                            url = new URL(supabaseUrl + "/rest/v1/chats");
-                            conn = (HttpURLConnection) url.openConnection();
-                            conn.setRequestMethod("POST");
-                            conn.setRequestProperty("apikey", apiKey);
-                            conn.setRequestProperty("Authorization", "Bearer " + apiKey);
-                            conn.setRequestProperty("Content-Type", "application/json");
-                            conn.setDoOutput(true);
+        } catch (Exception e) {
+            callback.onError("Error creando JSON: " + e.getMessage());
+            return;
+        }
 
-                            JSONObject nuevoChat = new JSONObject();
-                            nuevoChat.put("usuario1_id", usuarioActualId);
-                            nuevoChat.put("usuario2_id", usuarioOtroId);
+        // Construir petición POST
+        okhttp3.RequestBody body = okhttp3.RequestBody.create(
+                jsonBody.toString(),
+                okhttp3.MediaType.parse("application/json")
+        );
 
-                            DataOutputStream wr = new DataOutputStream(conn.getOutputStream());
-                            wr.writeBytes(nuevoChat.toString());
-                            wr.flush();
-                            wr.close();
+        okhttp3.Request request = new okhttp3.Request.Builder()
+                .url(url)
+                .addHeader("apikey", apiKey)
+                .addHeader("Authorization", "Bearer " + apiKey)
+                .addHeader("Content-Type", "application/json")
+                .post(body)
+                .build();
 
-                            responseCode = conn.getResponseCode();
-                            if (responseCode == 201) {
-                                BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                                StringBuilder sb = new StringBuilder();
-                                String line;
-                                while ((line = reader.readLine()) != null) {
-                                    sb.append(line);
-                                }
-                                reader.close();
+        okhttp3.OkHttpClient client = new okhttp3.OkHttpClient();
 
-                                JSONArray nuevoChatArray = new JSONArray(sb.toString());
-                                JSONObject chatCreado = nuevoChatArray.getJSONObject(0);
-                                return chatCreado.getString("id");
-                            } else {
-                                return null;
-                            }
-                        }
-                    } else {
-                        return null;
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    return null;
-                }
+        client.newCall(request).enqueue(new okhttp3.Callback() {
+            @Override
+            public void onFailure(okhttp3.Call call, IOException e) {
+                callback.onError(e.getMessage());
             }
-
-            protected void onPostExecute(String result) {
-                if (result != null) {
-                    callback.onSuccess(result);
+            @Override
+            public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    callback.onSuccess(response.body().string());
                 } else {
-                    callback.onError("Error al obtener o crear el chat");
+                    callback.onError("Error HTTP: " + response.code() + " - " + response.message());
                 }
             }
-        }.execute();
+        });
     }
 
-    public static void enviarMensaje(String supabaseUrl, String apiKey, String chatId, String remitenteId, String contenido, Callback callback) {
-        new AsyncTask<Void, Void, Boolean>() {
-            protected Boolean doInBackground(Void... voids) {
-                try {
-                    URL url = new URL(supabaseUrl + "/rest/v1/mensajes");
-                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                    conn.setRequestMethod("POST");
-                    conn.setRequestProperty("apikey", apiKey);
-                    conn.setRequestProperty("Authorization", "Bearer " + apiKey);
-                    conn.setRequestProperty("Content-Type", "application/json");
-                    conn.setDoOutput(true);
+    // Obtener mensajes entre dos usuarios
+    public static void obtenerMensajesChat(String supabaseUrl, String apiKey,
+                                           String usuario1, String usuario2, Callback callback) {
+        // Filtro para obtener mensajes en ambas direcciones
+        // ?select=*&or=(and(remitente_id.eq.usuario1,destinatario_id.eq.usuario2),and(remitente_id.eq.usuario2,destinatario_id.eq.usuario1))
+        String url = supabaseUrl + "/rest/v1/chat?" +
+                "select=*&" +
+                "or=(and(remitente_id.eq." + usuario1 + ",destinatario_id.eq." + usuario2 + ")," +
+                "and(remitente_id.eq." + usuario2 + ",destinatario_id.eq." + usuario1 + "))" +
+                "&order=enviado_en.asc";
 
-                    JSONObject mensaje = new JSONObject();
-                    mensaje.put("chat_id", chatId);
-                    mensaje.put("remitente_id", remitenteId);
-                    mensaje.put("contenido", contenido);
+        okhttp3.Request request = new okhttp3.Request.Builder()
+                .url(url)
+                .addHeader("apikey", apiKey)
+                .addHeader("Authorization", "Bearer " + apiKey)
+                .build();
 
-                    DataOutputStream wr = new DataOutputStream(conn.getOutputStream());
-                    wr.writeBytes(mensaje.toString());
-                    wr.flush();
-                    wr.close();
+        okhttp3.OkHttpClient client = new okhttp3.OkHttpClient();
 
-                    int responseCode = conn.getResponseCode();
-                    return responseCode == 201;
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    return false;
-                }
+        client.newCall(request).enqueue(new okhttp3.Callback() {
+            @Override
+            public void onFailure(okhttp3.Call call, IOException e) {
+                callback.onError(e.getMessage());
             }
-
-            protected void onPostExecute(Boolean success) {
-                if (success) {
-                    callback.onSuccess("Mensaje enviado");
+            @Override
+            public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    String resp = response.body().string();
+                    callback.onSuccess(resp);
                 } else {
-                    callback.onError("Error al enviar el mensaje");
+                    callback.onError("Error HTTP: " + response.code() + " - " + response.message());
                 }
             }
-        }.execute();
-    }
-
-    public static void obtenerMensajes(String supabaseUrl, String apiKey, String chatId, Callback callback) {
-        new AsyncTask<Void, Void, String>() {
-            protected String doInBackground(Void... voids) {
-                try {
-                    String urlStr = supabaseUrl + "/rest/v1/mensajes?chat_id=eq." + chatId + "&order=inserted_at.asc";
-
-                    URL url = new URL(urlStr);
-                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                    conn.setRequestMethod("GET");
-                    conn.setRequestProperty("apikey", apiKey);
-                    conn.setRequestProperty("Authorization", "Bearer " + apiKey);
-                    conn.setRequestProperty("Content-Type", "application/json");
-
-                    int responseCode = conn.getResponseCode();
-                    if (responseCode == 200) {
-                        BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                        String inputLine;
-                        StringBuilder response = new StringBuilder();
-                        while ((inputLine = in.readLine()) != null) {
-                            response.append(inputLine);
-                        }
-                        in.close();
-                        return response.toString();
-                    } else {
-                        return null;
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    return null;
-                }
-            }
-
-            protected void onPostExecute(String result) {
-                if (result != null) {
-                    callback.onSuccess(result);
-                } else {
-                    callback.onError("Error al obtener los mensajes");
-                }
-            }
-        }.execute();
+        });
     }
 }
+
