@@ -1,8 +1,14 @@
 package com.synunezcamacho.cuidame;
 
 import android.app.DatePickerDialog;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -29,22 +35,29 @@ import com.google.android.material.navigation.NavigationBarView;
 
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Calendar;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class Perfil extends AppCompatActivity {
-    Spinner spinnerTipoTiempo, spinnerExperiencia;
-    Toolbar toolbar;
-    Bundle bundle;
-    EditText edtNombre, edtDireccion, edtFechaNacimiento;
-    EditText salarioDesde, salarioHasta, edtSobreMi;
-    RadioGroup sexoGroup;
-    RadioButton rbMuje, rbHombre;
-    CheckBox checkBoxReferencia;
-    Button btnVerPerfilPublico,btnGuardar;
-    TextView cambio1, cambio2,cambio3, cambio4;
+    private Spinner spinnerTipoTiempo, spinnerExperiencia;
+    private Toolbar toolbar;
+    private Bundle bundle;
+    private EditText edtNombre, edtDireccion, edtFechaNacimiento;
+    private EditText salarioDesde, salarioHasta, edtSobreMi;
+    private RadioGroup sexoGroup;
+    private CheckBox checkBoxReferencia;
+    private Button btnVerPerfilPublico,btnGuardar;
+    private TextView cambio1, cambio2,cambio3, cambio4;
+    private static final int REQUEST_CODE_GALLERY = 101;
+    private CircleImageView imgPerfil;
+    private BottomNavigationView botonNavigationView;
     private static final String SUPABASE_URL = "https://ieymwafslrvnvbneybgc.supabase.co";
     private static final String SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlleW13YWZzbHJ2bnZibmV5YmdjIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0NDcxNjgwMSwiZXhwIjoyMDYwMjkyODAxfQ.6O4seaPmMGH2hWm-ICUes5lVfNsKF8mWV0XVwY-9SYo";
 
@@ -59,8 +72,6 @@ public class Perfil extends AppCompatActivity {
         edtDireccion = findViewById(R.id.edtDireccion);
         edtFechaNacimiento = findViewById(R.id.edtFechaNacimiento);
         sexoGroup = findViewById(R.id.sexoGroup);
-        rbMuje = findViewById(R.id.rbMujer);
-        rbHombre = findViewById(R.id.rbHombre);
         salarioDesde = findViewById(R.id.salarioDesde);
         salarioHasta = findViewById(R.id.salarioHasta);
         spinnerTipoTiempo =  findViewById(R.id.spinnerTipoTiempo);
@@ -68,14 +79,22 @@ public class Perfil extends AppCompatActivity {
         checkBoxReferencia = findViewById(R.id.checkBoxReferencia);
         edtSobreMi = findViewById(R.id.edtSobreMi);
         btnVerPerfilPublico = findViewById(R.id.btnVerPerfilPublico);
-        BottomNavigationView nav_menu = findViewById(R.id.bottom_navigation);
+        botonNavigationView = findViewById(R.id.bottom_navigation);
         btnGuardar = findViewById(R.id.btnGuardar);
+        imgPerfil = findViewById(R.id.imgPerfil);
+
         //cambio de texto buscoCudiador o SoyCuidador
         cambio1 = findViewById(R.id.cambio1);
         cambio2 = findViewById(R.id.cambio2);
         cambio3 = findViewById(R.id.cambio3);
         cambio4 = findViewById(R.id.cambio4);
 
+        //imagen de galeria
+        imgPerfil.setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_PICK);
+            intent.setType("image/*");
+            startActivityForResult(intent, REQUEST_CODE_GALLERY);
+        });
 
         btnGuardar.setOnClickListener(view -> {
             // Primero preparas tu objeto usuario, lo validas, etc.
@@ -84,6 +103,7 @@ public class Perfil extends AppCompatActivity {
             if (salarioValidar(usuario)) {
                 guardarPerfilEnSupabase(usuario);
             }
+
         });
         // la barra del toolbar
         toolbar = findViewById(R.id.miToolbar);
@@ -137,6 +157,9 @@ public class Perfil extends AppCompatActivity {
             checkboxUsuario(usuario);
             sobreUsuario(usuario);
             if (!salarioValidar(usuario)) return;
+            if (usuario.getFechaNacimiento() == null || usuario.getFechaNacimiento().isEmpty()) {
+                usuario.setFechaNacimiento("No especificado");
+            }
 
             Intent intent = new Intent(Perfil.this, PerfilPublico.class);
             // Pasar el objeto Usuario al Intent
@@ -147,7 +170,7 @@ public class Perfil extends AppCompatActivity {
 
 
         //la parte del menu_nav
-        nav_menu.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+        botonNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int id = item.getItemId();
@@ -156,7 +179,7 @@ public class Perfil extends AppCompatActivity {
                     startActivity(intent);
                     return true;
                 } else if (id == R.id.page_chat) {
-                    Intent intent = new Intent(Perfil.this, ChatActivity.class);
+                    Intent intent = new Intent(Perfil.this, Contacto.class);
                     startActivity(intent);
                     return true;
                 } else if (id == R.id.page_perfil) {
@@ -167,6 +190,7 @@ public class Perfil extends AppCompatActivity {
                 return false;
             }
         });
+
 
     }
 
@@ -195,6 +219,12 @@ public class Perfil extends AppCompatActivity {
     private boolean salarioValidar(Usuario usuario){
         String salarioDesdeText = salarioDesde.getText().toString();
         String salarioHastaText = salarioHasta.getText().toString();
+
+        if (salarioDesdeText.isEmpty() || salarioHastaText.isEmpty()) {
+            Toast.makeText(this, "Completa ambos campos de salario", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
         double salarioDesdeValor = Double.parseDouble(salarioDesdeText);
         double salarioHastaValor = Double.parseDouble(salarioHastaText);
 
@@ -284,9 +314,11 @@ public class Perfil extends AppCompatActivity {
                 json.put("describe_busqueda", obtenerDescribeBusquedaSegunPerfil(usuario));
                 json.put("sobre_mi", usuario.getSobremi());
 
+                //envia solicitud put actualizacaion
                 URL url = new URL(SUPABASE_URL + "/rest/v1/informacion_adicional");
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("POST");
+                //conn.setRequestMethod("PATCH");
                 conn.setRequestProperty("Content-Type", "application/json");
                 conn.setRequestProperty("apikey", SUPABASE_KEY);
                 conn.setRequestProperty("Authorization", "Bearer " + SUPABASE_KEY);
@@ -392,6 +424,25 @@ public class Perfil extends AppCompatActivity {
         // Aquí puedes asignar otros campos si es necesario
 
         return usuario;
+    }
+
+    //Galeria
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_CODE_GALLERY && resultCode == RESULT_OK && data != null) {
+            Uri imagenUri = data.getData();
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imagenUri);
+                imgPerfil.setImageBitmap(bitmap);
+
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                Toast.makeText(this, "Error al cargar imagen", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
 }

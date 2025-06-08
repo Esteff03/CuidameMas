@@ -65,6 +65,10 @@ public class Contacto extends AppCompatActivity {
         }
 
         //actividad de nav_menu
+        //nav_menu
+        botonNavigationView = findViewById(R.id.bottom_navigation);
+        botonNavigationView.setSelectedItemId(R.id.page_chat);
+
         botonNavigationView.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
             if (id == R.id.page_mapa) {

@@ -73,6 +73,9 @@ public class PerfilPublico extends AppCompatActivity {
             finish();
         });
 
+        //recuerar la imagen
+
+
         //visualizacion de los datos almacenador
         Usuario usuario = (Usuario) getIntent().getSerializableExtra("perfil");
 
@@ -91,16 +94,16 @@ public class PerfilPublico extends AppCompatActivity {
 
         botonNavigationView.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
-            if (id == R.id.page_chat) {
-                Log.d("MENU", "Opción seleccionada: Chat");
-                startActivity(new Intent(PerfilPublico.this, Contacto.class));
-                return true;
-            } else if (id == R.id.page_mapa) {
-                Log.d("MENU", "Opción seleccionada: Mapa");
+            if (id == R.id.page_mapa) {
                 startActivity(new Intent(PerfilPublico.this, Mapa.class));
+                overridePendingTransition(0, 0);
+                return true;
+            } else if (id == R.id.page_chat) {
+                startActivity(new Intent(PerfilPublico.this, Contacto.class));
+                overridePendingTransition(0, 0);
                 return true;
             } else if (id == R.id.page_perfil) {
-                Log.d("MENU", "Opción seleccionada: Perfil");
+
                 return true;
             }
             return false;
