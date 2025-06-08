@@ -5,6 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fontFamily="@font/fredoka"
     tools:context=".Registro">
 
     <ImageView
@@ -12,49 +13,48 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
-        android:layout_alignParentTop="true"
-        android:contentDescription="@null"/>
+        android:contentDescription="@null"
+        android:importantForAccessibility="no" />
 
     <LinearLayout
         android:layout_width="306dp"
         android:layout_height="677dp"
-        android:layout_centerInParent="true"
         android:background="@drawable/fondo_transparente"
         android:elevation="4dp"
         android:orientation="vertical"
         android:padding="24dp"
+        android:fontFamily="@font/fredoka"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:layout_width="268dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
             android:layout_marginBottom="10dp"
-            android:fontFamily="@font/jaldi"
             android:gravity="center"
             android:text="@string/tituloRegistrarse"
             android:textAlignment="center"
             android:textColor="@android:color/black"
-            android:textSize="50sp" />
+            android:textSize="50sp"
+            android:fontFamily="@font/fredoka" />
 
         <LinearLayout
-            android:layout_width="274dp"
+            android:layout_width="match_parent"
             android:layout_height="65dp"
             android:orientation="horizontal">
 
             <LinearLayout
-                android:layout_width="129dp"
-                android:layout_height="65dp"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/asteriscoNombre"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
                     android:text="@string/asterisco"
                     android:textColor="@android:color/holo_red_dark"
                     android:visibility="gone" />
@@ -68,21 +68,29 @@
 
                 <EditText
                     android:id="@+id/nombre"
-                    android:layout_width="115dp"
+                    android:layout_width="match_parent"
                     android:layout_height="48dp"
-                    android:autofillHints="nombre"
                     android:background="@drawable/circulo_texto"
                     android:gravity="center"
                     android:hint="@string/nombre"
                     android:inputType="text" />
-
             </LinearLayout>
 
+            <Space android:layout_width="10dp" android:layout_height="match_parent" />
+
             <LinearLayout
-                android:layout_width="129dp"
-                android:layout_height="65dp"
-                android:layout_marginStart="10dp"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/asteriscoApellido"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/asterisco"
+                    android:textColor="@android:color/holo_red_dark"
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/invisibleApellido"
@@ -91,36 +99,22 @@
                     android:text="@string/apellido"
                     android:visibility="gone" />
 
-                <TextView
-                    android:id="@+id/asteriscoApellido"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:text="@string/asterisco"
-                    android:textColor="@android:color/holo_red_dark"
-                    android:visibility="gone" />
-
-
                 <EditText
                     android:id="@+id/apellido"
-                    android:layout_width="115dp"
+                    android:layout_width="match_parent"
                     android:layout_height="48dp"
-                    android:layout_marginBottom="4dp"
-                    android:autofillHints="apellido"
                     android:background="@drawable/circulo_texto"
                     android:gravity="center"
                     android:hint="@string/apellido"
                     android:inputType="text" />
             </LinearLayout>
-
         </LinearLayout>
 
+        <!-- EMAIL -->
         <TextView
             android:id="@+id/asteriscoEmail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:gravity="center_vertical"
             android:text="@string/asterisco"
             android:textColor="@android:color/holo_red_dark"
             android:visibility="gone" />
@@ -136,21 +130,17 @@
             android:id="@+id/email"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:layout_marginBottom="20dp"
-            android:autofillHints="emailAddress"
+            android:layout_marginBottom="16dp"
             android:background="@drawable/circulo_texto"
             android:gravity="center"
             android:hint="@string/email"
-            android:inputType="textEmailAddress"
+            android:inputType="textEmailAddress" />
 
-            />
-
+        <!-- PASSWORD -->
         <TextView
             android:id="@+id/asteriscoPassword"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:gravity="center_vertical"
             android:text="@string/asterisco"
             android:textColor="@android:color/holo_red_dark"
             android:visibility="gone" />
@@ -166,21 +156,17 @@
             android:id="@+id/password"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:layout_marginBottom="20dp"
-            android:autofillHints="contraseña"
+            android:layout_marginBottom="16dp"
             android:background="@drawable/circulo_texto"
             android:gravity="center"
             android:hint="@string/password"
-            android:inputType="textPassword"
+            android:inputType="textPassword" />
 
-            />
-
+        <!-- DIRECCIÓN -->
         <TextView
             android:id="@+id/asteriscoDireccion"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:gravity="center_vertical"
             android:text="@string/asterisco"
             android:textColor="@android:color/holo_red_dark"
             android:visibility="gone" />
@@ -196,21 +182,17 @@
             android:id="@+id/direccion"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:layout_marginBottom="20dp"
-            android:autofillHints="direccion"
+            android:layout_marginBottom="16dp"
             android:background="@drawable/circulo_texto"
             android:gravity="center"
             android:hint="@string/direccion"
-            android:inputType="text"
+            android:inputType="text" />
 
-            />
-
+        <!-- TELÉFONO -->
         <TextView
             android:id="@+id/asteriscoTelefono"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:gravity="center_vertical"
             android:text="@string/asterisco"
             android:textColor="@android:color/holo_red_dark"
             android:visibility="gone" />
@@ -227,25 +209,22 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_marginBottom="20dp"
-            android:autofillHints="telefono"
             android:background="@drawable/circulo_texto"
             android:gravity="center"
             android:hint="@string/telefono"
-            android:inputType="number"
+            android:inputType="phone" />
 
-            />
-
-
+        <!-- BOTÓN CONTINUAR -->
         <Button
             android:id="@+id/botonContinuar"
-            android:layout_width="157dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="50dp"
-            android:layout_marginTop="16dp"
-            android:backgroundTint="@color/principal"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/rounded_button"
             android:text="@string/continua"
-            android:textColor="@android:color/white" />
-
+            android:textColor="@color/negro"
+            android:textSize="18sp"
+            android:fontFamily="@font/fredoka" />
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

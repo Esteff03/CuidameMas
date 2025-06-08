@@ -80,7 +80,6 @@ public class Mapa extends AppCompatActivity implements OnMapReadyCallback {
             obtenerUidDesdeEmail(emailDestinatario);
         }
 
-
         //nav_menu
         botonNavigationView = findViewById(R.id.bottom_navigation);
         botonNavigationView.setSelectedItemId(R.id.page_mapa);
@@ -381,7 +380,17 @@ public class Mapa extends AppCompatActivity implements OnMapReadyCallback {
                 Intent intent = new Intent(Mapa.this, ChatActivity.class);
                 intent.putExtra(Constants.EXTRA_ID_CONTACTO, usuarioSeleccionado.getId());
                 intent.putExtra(Constants.EXTRA_NOMBRE_CONTACTO, usuarioSeleccionado.getNombre());
+                intent.putExtra("UUID_ACTUAL", tuUsuarioActualId);
+                intent.putExtra("UUID_DESTINATARIO", uidDestinatario != null ? uidDestinatario : usuarioSeleccionado.getId());
+
+                String username = getSharedPreferences("session", MODE_PRIVATE).getString("username", null);
+                if (username != null) {
+                    intent.putExtra("USERNAME_ACTUAL", username);  // ✅
+                } else {
+                    Log.e("MAPA", "username no está disponible en SharedPreferences");
+                }
                 startActivity(intent);
+
             } else {
                 Toast.makeText(Mapa.this, "Selecciona un usuario primero", Toast.LENGTH_SHORT).show();
             }
@@ -433,8 +442,5 @@ public class Mapa extends AppCompatActivity implements OnMapReadyCallback {
             }
         }).start();
     }
-
-
-
 
 }

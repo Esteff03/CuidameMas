@@ -5,6 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fontFamily="@font/fredoka"
     tools:context=".TipoDeRegistro">
 
     <ImageView
@@ -12,73 +13,81 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
-        android:layout_alignParentTop="true"
         android:contentDescription="@null"
-        />
+        android:importantForAccessibility="no" />
 
     <LinearLayout
         android:layout_width="305dp"
         android:layout_height="624dp"
-        android:layout_centerInParent="true"
-        android:elevation="4dp"
         android:orientation="vertical"
         android:padding="24dp"
         android:background="@drawable/fondo_transparente"
+        android:elevation="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+        <!-- Título -->
         <TextView
-            android:layout_width="273dp"
-            android:layout_height="200dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:fontFamily="@font/jaldi"
+            android:layout_marginBottom="30dp"
             android:text="@string/tituloPerfil"
             android:textAlignment="center"
             android:textColor="@android:color/black"
-            android:autoSizeTextType="uniform"
-            />
+            android:textSize="40sp"
+            android:fontFamily="@font/fredoka"
+            android:autoSizeTextType="uniform" />
+
+        <!-- Botón Cuidador -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/botonCuidador"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/rounded_button"
+            android:text="@string/soyCuidador"
+            android:textColor="@color/negro"
+            android:textSize="18sp"
+            android:fontFamily="@font/fredoka"
+            android:padding="12dp"
             app:icon="@drawable/cuidador"
             app:iconGravity="textEnd"
-            app:iconTint="@color/negro"
             app:iconPadding="70dp"
             app:iconSize="32dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:padding="10dp"
-            android:text="@string/soyCuidador"
-            android:textColor="@android:color/black"
-            android:backgroundTint="@color/crema"
-            />
+            app:iconTint="@color/negro" />
+
+        <!-- Botón Busco Cuidador -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/botonBuscoCuidador"
-            app:icon="@drawable/buscador"
-            app:iconGravity="textEnd"
-            app:iconTint="@color/negro"
-            app:iconPadding="50dp"
-            app:iconSize="32dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:padding="10dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/rounded_button"
             android:text="@string/buscoCuidador"
-            android:textColor="@android:color/black"
-            android:backgroundTint="@color/crema"
-            />
+            android:textColor="@color/negro"
+            android:textSize="18sp"
+            android:fontFamily="@font/fredoka"
+            android:padding="12dp"
+            app:icon="@drawable/buscador"
+            app:iconGravity="textEnd"
+            app:iconPadding="50dp"
+            app:iconSize="32dp"
+            app:iconTint="@color/negro" />
 
+        <!-- Botón Registro -->
         <Button
             android:id="@+id/botonRegistro"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:backgroundTint="@color/principal"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/rounded_button"
             android:text="@string/registro"
             android:textColor="@color/blanco"
-            />
+            android:textSize="18sp"
+            android:fontFamily="@font/fredoka" />
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

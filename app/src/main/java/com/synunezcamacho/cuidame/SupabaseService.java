@@ -1,56 +1,52 @@
 package com.synunezcamacho.cuidame;
 
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
-import android.widget.Toast;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class SupabaseService {
 
-    public interface Callback {
+    // Interfaz de callback personalizada
+    public interface SupabaseCallback {
         void onSuccess(String response);
         void onError(String error);
     }
 
-    // Insertar mensaje en tabla chat
+    private static final OkHttpClient client = new OkHttpClient();
+    private static final MediaType JSON = MediaType.parse("application/json");
+
+    // Método para enviar un mensaje a la tabla messages
     public static void enviarMensajeEnChat(String supabaseUrl, String apiKey,
                                            String remitenteId, String destinatarioId,
-                                           String contenido, Callback callback) {
-        // Endpoint para insertar en tabla "chat"
+                                           String contenido, String username,
+                                           SupabaseCallback callback) {
+
         String url = supabaseUrl + "/rest/v1/messages";
 
         JSONObject jsonBody = new JSONObject();
         try {
-            jsonBody.put("remitente_id", remitenteId);
-            jsonBody.put("destinatario_id", destinatarioId);
-            jsonBody.put("contenido", contenido);
-            jsonBody.put("enviado_en", System.currentTimeMillis()); // timestamp o usa formato ISO
-
+            jsonBody.put("user_id", remitenteId);
+            jsonBody.put("contact_id", destinatarioId);
+            jsonBody.put("content", contenido);
+            jsonBody.put("username", username);
         } catch (Exception e) {
             callback.onError("Error creando JSON: " + e.getMessage());
             return;
         }
 
-        // Construir petición POST
-        okhttp3.RequestBody body = okhttp3.RequestBody.create(
-                jsonBody.toString(),
-                okhttp3.MediaType.parse("application/json")
-        );
+        RequestBody body = RequestBody.create(jsonBody.toString(), JSON);
 
-        okhttp3.Request request = new okhttp3.Request.Builder()
+        Request request = new Request.Builder()
                 .url(url)
                 .addHeader("apikey", apiKey)
                 .addHeader("Authorization", "Bearer " + apiKey)
@@ -58,58 +54,57 @@ public class SupabaseService {
                 .post(body)
                 .build();
 
-        okhttp3.OkHttpClient client = new okhttp3.OkHttpClient();
-
-        client.newCall(request).enqueue(new okhttp3.Callback() {
+        client.newCall(request).enqueue(new Callback() {
             @Override
-            public void onFailure(okhttp3.Call call, IOException e) {
-                callback.onError(e.getMessage());
+            public void onFailure(Call call, IOException e) {
+                callback.onError("Error de red: " + e.getMessage());
             }
+
             @Override
-            public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
+            public void onResponse(Call call, Response response) throws IOException {
+                String responseBody = response.body() != null ? response.body().string() : "";
                 if (response.isSuccessful()) {
-                    callback.onSuccess(response.body().string());
+                    callback.onSuccess(responseBody);
                 } else {
-                    callback.onError("Error HTTP: " + response.code() + " - " + response.message());
+                    callback.onError("Error HTTP: " + response.code() + " - " + responseBody);
                 }
             }
         });
     }
 
-    // Obtener mensajes entre dos usuarios
     public static void obtenerMensajesChat(String supabaseUrl, String apiKey,
-                                           String usuario1, String usuario2, Callback callback) {
-        // Filtro para obtener mensajes en ambas direcciones
-        // ?select=*&or=(and(remitente_id.eq.usuario1,destinatario_id.eq.usuario2),and(remitente_id.eq.usuario2,destinatario_id.eq.usuario1))
-        String url = supabaseUrl + "/rest/v1/chat?" +
+                                           String usuario1, String usuario2,
+                                           SupabaseCallback callback) {
+        String url = supabaseUrl + "/rest/v1/messages?" +
                 "select=*&" +
-                "or=(and(remitente_id.eq." + usuario1 + ",destinatario_id.eq." + usuario2 + ")," +
-                "and(remitente_id.eq." + usuario2 + ",destinatario_id.eq." + usuario1 + "))" +
-                "&order=enviado_en.asc";
+                "or=(and(user_id.eq." + usuario1 + ",contact_id.eq." + usuario2 + ")," +
+                "and(user_id.eq." + usuario2 + ",contact_id.eq." + usuario1 + "))" +
+                "&order=inserted_at.asc";
 
-        okhttp3.Request request = new okhttp3.Request.Builder()
+        Request request = new Request.Builder()
                 .url(url)
                 .addHeader("apikey", apiKey)
                 .addHeader("Authorization", "Bearer " + apiKey)
+                .addHeader("Accept", "application/json")
                 .build();
 
-        okhttp3.OkHttpClient client = new okhttp3.OkHttpClient();
-
-        client.newCall(request).enqueue(new okhttp3.Callback() {
+        client.newCall(request).enqueue(new Callback() {
             @Override
-            public void onFailure(okhttp3.Call call, IOException e) {
-                callback.onError(e.getMessage());
+            public void onFailure(Call call, IOException e) {
+                callback.onError("Fallo de red: " + e.getMessage());
             }
+
             @Override
-            public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
+            public void onResponse(Call call, Response response) throws IOException {
+                String responseBody = response.body() != null ? response.body().string() : "";
+                Log.d("SupabaseService", "Respuesta del servidor: " + responseBody);
+
                 if (response.isSuccessful()) {
-                    String resp = response.body().string();
-                    callback.onSuccess(resp);
+                    callback.onSuccess(responseBody);
                 } else {
-                    callback.onError("Error HTTP: " + response.code() + " - " + response.message());
+                    callback.onError("Error HTTP " + response.code() + ": " + responseBody);
                 }
             }
         });
     }
 }
-

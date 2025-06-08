@@ -2,6 +2,8 @@ package com.synunezcamacho.cuidame;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
@@ -41,6 +43,22 @@ public class Welcome extends AppCompatActivity {
             Intent intent = new Intent(Welcome.this, Login.class); // Cambia LoginActivity por la clase destino
             startActivity(intent);
         });
+
+        View.OnTouchListener touchEffect = (v, event) -> {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    v.animate().scaleX(0.95f).scaleY(0.95f).setDuration(100).start();
+                    break;
+                case MotionEvent.ACTION_UP:
+                case MotionEvent.ACTION_CANCEL:
+                    v.animate().scaleX(1f).scaleY(1f).setDuration(100).start();
+                    break;
+            }
+            return false;
+        };
+
+        findViewById(R.id.btnIniciarSesion).setOnTouchListener(touchEffect);
+        findViewById(R.id.btnRegistrarse).setOnTouchListener(touchEffect);
     }
 
 
