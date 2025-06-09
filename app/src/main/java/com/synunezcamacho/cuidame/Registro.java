@@ -30,6 +30,7 @@ public class Registro extends AppCompatActivity {
     EditText edtNombre, edtApellido, edtEmail, edtPassword, edtDireccion, edtTelefono;
     Button btnContinuar;
 
+
     // Supabase Auth
     private static final String SUPABASE_URL = "https://ieymwafslrvnvbneybgc.supabase.co";
     private static final String SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlleW13YWZzbHJ2bnZibmV5YmdjIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0NDcxNjgwMSwiZXhwIjoyMDYwMjkyODAxfQ.6O4seaPmMGH2hWm-ICUes5lVfNsKF8mWV0XVwY-9SYo";
@@ -66,6 +67,8 @@ public class Registro extends AppCompatActivity {
                 registrarEnSupabase(getActualUser, perfilSeleccionado);
             }
         });
+
+
     }
 
     public Usuario registrarUsuario() {

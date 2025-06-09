@@ -18,9 +18,10 @@ import android.view.View;
 
 public class TipoDeRegistro extends AppCompatActivity {
 
+
     private Button botonCuidador, botonBuscoCuidador;
     private String perfilSeleccionado = "";
-
+    private ImageView imgAtras;
 
 
     @Override
@@ -60,6 +61,18 @@ public class TipoDeRegistro extends AppCompatActivity {
             }
             actualizarColoresBotones();
         });
+
+        imgAtras = findViewById(R.id.btnAtras);
+
+        //boton para atras
+        imgAtras.setOnClickListener(v -> {
+            Intent intent = new Intent(TipoDeRegistro.this, Login.class);
+            startActivity(intent);
+            finish();
+        });
+
+
+
 
         botonCuidador = findViewById(R.id.botonCuidador);
         botonBuscoCuidador = findViewById(R.id.botonBuscoCuidador);
