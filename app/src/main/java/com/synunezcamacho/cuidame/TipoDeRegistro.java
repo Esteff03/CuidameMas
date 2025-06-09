@@ -12,12 +12,16 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import jp.wasabeef.glide.transformations.BlurTransformation;
+import android.view.MotionEvent;
+import android.view.View;
 
 
 public class TipoDeRegistro extends AppCompatActivity {
 
     private Button botonCuidador, botonBuscoCuidador;
     private String perfilSeleccionado = "";
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +61,16 @@ public class TipoDeRegistro extends AppCompatActivity {
             actualizarColoresBotones();
         });
 
+        botonCuidador = findViewById(R.id.botonCuidador);
+        botonBuscoCuidador = findViewById(R.id.botonBuscoCuidador);
+         botonRegistro = findViewById(R.id.botonRegistro);
+
+// 👇 Aplicar animación táctil
+        botonCuidador.setOnTouchListener(touchEffect);
+        botonBuscoCuidador.setOnTouchListener(touchEffect);
+        botonRegistro.setOnTouchListener(touchEffect);
+
+
 
         botonRegistro.setOnClickListener(view -> {
             if (!perfilSeleccionado.isEmpty()) {
@@ -89,4 +103,18 @@ public class TipoDeRegistro extends AppCompatActivity {
 
 
     }
+
+    View.OnTouchListener touchEffect = (v, event) -> {
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                v.animate().scaleX(0.95f).scaleY(0.95f).setDuration(100).start();
+                break;
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_CANCEL:
+                v.animate().scaleX(1f).scaleY(1f).setDuration(100).start();
+                break;
+        }
+        return false; // importante: deja que el click se siga ejecutando
+    };
+
 }

@@ -59,7 +59,6 @@ public class ContactoAdapter extends RecyclerView.Adapter<ContactoAdapter.Contac
             if (!(context instanceof android.app.Activity)) {
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             }
-
             context.startActivity(intent);
         });
 

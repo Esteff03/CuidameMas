@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fontFamily="@font/fredoka"
+
     tools:context=".Login">
 
     <ImageView
@@ -29,7 +30,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.95" />
+        app:layout_constraintGuide_percent="0.95"
+        />
 
     <!-- Email -->
     <com.google.android.material.textfield.TextInputLayout
@@ -38,6 +40,7 @@
         android:layout_height="wrap_content"
         android:hint="@string/emailTitulo"
         android:layout_marginTop="260dp"
+        app:hintAnimationEnabled="false"
         app:layout_constraintStart_toStartOf="@id/guideline1"
         app:layout_constraintEnd_toEndOf="@id/guideline2"
         app:layout_constraintTop_toTopOf="parent">
@@ -47,7 +50,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textEmailAddress"
-            android:background="@drawable/rounded_edittext" />
+            android:background="@drawable/rounded_edittext"
+            app:hintAnimationEnabled="false"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <!-- Contraseña -->
@@ -56,6 +60,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
+        app:hintAnimationEnabled="false"
         android:hint="@string/password"
         app:passwordToggleEnabled="true"
         app:layout_constraintTop_toBottomOf="@id/emailLayout"
@@ -67,7 +72,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPassword"
-            android:background="@drawable/rounded_edittext" />
+            android:background="@drawable/rounded_edittext"
+            app:hintAnimationEnabled="false"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <!-- Botón Iniciar Sesión -->
