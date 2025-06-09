@@ -82,7 +82,6 @@ public class PerfilPublico extends AppCompatActivity {
         Usuario usuario = (Usuario) getIntent().getSerializableExtra("perfil");
 
         if (usuario != null) {
-            txtNombre.setText(usuario.getNombre() + " " + usuario.getApellido());
             txtFechaNacimiento.setText("Fecha Nacimiento: "+usuario.getFechaNacimiento());
             txtSexo.setText("Sexo: " + usuario.getGenero());
             txtDireccion.setText("Direccion: " + usuario.getDireccion());
@@ -165,10 +164,11 @@ public class PerfilPublico extends AppCompatActivity {
 
                 // Mostrar en UI
                 runOnUiThread(() -> {
-                    String nombreCompleto = (datosUsuario != null ? datosUsuario.optString("nombre", "") + " " + datosUsuario.optString("apellido", "") : "");
+                    String nombre = datosUsuario != null ? datosUsuario.optString("Nombre", "") : "";
+
                     String direccion = datosUsuario != null ? datosUsuario.optString("direccion", "") : "";
 
-                    txtNombre.setText(nombreCompleto);
+                    txtNombre.setText(nombre);
                     txtFechaNacimiento.setText("Fecha Nacimiento: " + formatearFechaDesdeBD(datosAdicionales.optString("fecha_nacimiento", "")));
                     txtSexo.setText("Sexo: " + datosAdicionales.optString("sexo", ""));
                     txtSalario.setText("Salario: " + datosAdicionales.optDouble("salario", 0));
