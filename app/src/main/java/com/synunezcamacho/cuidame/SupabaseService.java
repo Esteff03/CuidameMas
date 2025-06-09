@@ -1,22 +1,28 @@
 package com.synunezcamacho.cuidame;
 
+import android.content.Context;
 import android.util.Log;
 
+import com.android.volley.Request;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class SupabaseService {
 
-    // Interfaz de callback personalizada
     public interface SupabaseCallback {
         void onSuccess(String response);
         void onError(String error);
@@ -25,12 +31,10 @@ public class SupabaseService {
     private static final OkHttpClient client = new OkHttpClient();
     private static final MediaType JSON = MediaType.parse("application/json");
 
-    // Método para enviar un mensaje a la tabla messages
     public static void enviarMensajeEnChat(String supabaseUrl, String apiKey,
                                            String remitenteId, String destinatarioId,
                                            String contenido, String username,
                                            SupabaseCallback callback) {
-
         String url = supabaseUrl + "/rest/v1/messages";
 
         JSONObject jsonBody = new JSONObject();
@@ -45,8 +49,7 @@ public class SupabaseService {
         }
 
         RequestBody body = RequestBody.create(jsonBody.toString(), JSON);
-
-        Request request = new Request.Builder()
+        okhttp3.Request request = new okhttp3.Request.Builder()
                 .url(url)
                 .addHeader("apikey", apiKey)
                 .addHeader("Authorization", "Bearer " + apiKey)
@@ -81,12 +84,12 @@ public class SupabaseService {
                 "and(user_id.eq." + usuario2 + ",contact_id.eq." + usuario1 + "))" +
                 "&order=inserted_at.asc";
 
-        Request request = new Request.Builder()
+        okhttp3.Request request = new okhttp3.Request.Builder()
                 .url(url)
                 .addHeader("apikey", apiKey)
                 .addHeader("Authorization", "Bearer " + apiKey)
                 .addHeader("Accept", "application/json")
-                .build();
+                .build(); // 👈 Esto es GET por defecto
 
         client.newCall(request).enqueue(new Callback() {
             @Override
@@ -106,5 +109,36 @@ public class SupabaseService {
                 }
             }
         });
+    }
+
+    public static void enviarTokenFCM(Context context, String token) {
+        String uuid = UUIDManager.getUUID(context);
+
+        JSONObject jsonBody = new JSONObject();
+        try {
+            jsonBody.put("fcm_token", token);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        JsonObjectRequest request = new JsonObjectRequest(
+                Request.Method.PUT,
+                Mapa.SUPABASE_URL + "/rest/v1/profiles?id=eq." + uuid,
+                jsonBody,
+                response -> Log.d("FCM", "Token guardado en Supabase"),
+                error -> Log.e("FCM", "Error al guardar token: " + error.getMessage())
+        ) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> headers = new HashMap<>();
+                headers.put("apikey", Mapa.SUPABASE_API_KEY);
+                headers.put("Authorization", "Bearer " + Mapa.SUPABASE_API_KEY);
+                headers.put("Content-Type", "application/json");
+                headers.put("Prefer", "resolution=merge-duplicates");
+                return headers;
+            }
+        };
+
+        Volley.newRequestQueue(context).add(request);
     }
 }

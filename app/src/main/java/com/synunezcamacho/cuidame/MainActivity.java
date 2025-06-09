@@ -1,4 +1,5 @@
 package com.synunezcamacho.cuidame;
+import com.google.firebase.FirebaseApp;
 import com.synunezcamacho.cuidame.R;
 import android.content.Intent;
 import android.os.Bundle;
@@ -24,6 +25,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
+
+        FirebaseApp.initializeApp(this);
+
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override

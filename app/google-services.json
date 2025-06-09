@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "682712514961",
+    "project_id": "cuidame-747df",
+    "storage_bucket": "cuidame-747df.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:682712514961:android:51c0d5153f42770b9dda30",
+        "android_client_info": {
+          "package_name": "com.synunezcamacho.cuidame"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBdZMGJHNAZxxJ04LohmImYboRwQqqhBgo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
