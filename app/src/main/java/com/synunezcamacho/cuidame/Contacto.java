@@ -23,6 +23,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
 
@@ -87,17 +88,47 @@ public class Contacto extends AppCompatActivity {
         });
     }
 
+
+    private String obtenerNombreDesdeUsers(String userId) {
+        try {
+            String urlStr = SUPABASE_URL + "/rest/v1/Users?id=eq." + userId + "&select=Nombre";
+            URL url = new URL(urlStr);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            conn.setRequestProperty("apikey", SUPABASE_KEY);
+            conn.setRequestProperty("Authorization", "Bearer " + SUPABASE_KEY);
+            conn.setRequestProperty("Accept", "application/json");
+
+            if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                InputStream is = conn.getInputStream();
+                Scanner scanner = new Scanner(is);
+                StringBuilder response = new StringBuilder();
+                while (scanner.hasNext()) {
+                    response.append(scanner.nextLine());
+                }
+                scanner.close();
+
+                JSONArray jsonArray = new JSONArray(response.toString());
+                if (jsonArray.length() > 0) {
+                    JSONObject usuario = jsonArray.getJSONObject(0);
+                    return usuario.getString("Nombre"); // Usa el nombre real de la columna
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "Usuario";
+    }
+
     private void cargarMensajesDeUsuario(String userId) {
         Log.d("Contacto", "User ID para consulta: " + userId);
         new Thread(() -> {
             try {
-                // Endpoint para obtener mensajes filtrados por contact_id = userId
-                // Aquí se asume que el nombre de la tabla en supabase es "messages"
-                // y que quieres los últimos mensajes ordenados por insert_at desc
+                String urlStr = SUPABASE_URL + "/rest/v1/messages?" +
+                        "or=(user_id.eq." + userId + ",contact_id.eq." + userId + ")" +
+                        "&select=*&order=inserted_at.desc";
 
-                String urlStr = SUPABASE_URL + "/rest/v1/mensajes?remitente_id=eq." + userId + "&select=*&order=enviado_en.desc";
                 URL url = new URL(urlStr);
-
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("GET");
                 conn.setRequestProperty("apikey", SUPABASE_KEY);
@@ -117,25 +148,32 @@ public class Contacto extends AppCompatActivity {
 
                     JSONArray jsonArray = new JSONArray(response.toString());
 
-                    listaContactos.clear();
-
-                    // Para evitar mostrar mensajes duplicados del mismo contacto,
-                    // podemos usar un Map o HashSet para filtrar contactos únicos,
-                    // pero por simplicidad agregamos todos aquí
+                    // Filtrar por último mensaje por contacto (contact_id)
+                    HashMap<String, ContactoPreview> contactoMap = new HashMap<>();
 
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject mensaje = jsonArray.getJSONObject(i);
-                        String idContacto = mensaje.getString("contact_id");
-                        String nombreUsuario = mensaje.getString("username");
-                        String ultimoMensaje = mensaje.getString("content");
-                        String hora = mensaje.getString("insert_at"); // aquí podrías formatear la fecha/hora
 
-                        // Como no tienes imagen real, usa tu drawable por defecto
-                        int imagenPerfil = R.drawable.camara;
+                        String remitenteId = mensaje.getString("user_id");
+                        String destinatarioId = mensaje.getString("contact_id");
+                        String otroUsuarioId = remitenteId.equals(userId) ? destinatarioId : remitenteId;
 
-                        ContactoPreview contacto = new ContactoPreview(idContacto, nombreUsuario, ultimoMensaje, hora, imagenPerfil);
-                        listaContactos.add(contacto);
+                        if (!contactoMap.containsKey(otroUsuarioId)) {
+                            String nombreUsuario = obtenerNombreDesdeUsers(otroUsuarioId);
+                            String ultimoMensaje = mensaje.getString("content");
+                            String hora = mensaje.getString("inserted_at");
+                            int imagenPerfil = R.drawable.camara;
+
+                            ContactoPreview contacto = new ContactoPreview(
+                                    otroUsuarioId, nombreUsuario, ultimoMensaje, hora, imagenPerfil
+                            );
+
+                            contactoMap.put(otroUsuarioId, contacto);
+                        }
                     }
+
+                    listaContactos.clear();
+                    listaContactos.addAll(contactoMap.values());
 
                     runOnUiThread(() -> {
                         adapter.notifyDataSetChanged();
@@ -164,6 +202,6 @@ public class Contacto extends AppCompatActivity {
                 runOnUiThread(() -> Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_LONG).show());
             }
         }).start();
-
     }
+
 }
