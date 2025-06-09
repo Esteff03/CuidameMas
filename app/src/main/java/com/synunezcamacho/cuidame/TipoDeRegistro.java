@@ -66,7 +66,7 @@ public class TipoDeRegistro extends AppCompatActivity {
 
         //boton para atras
         imgAtras.setOnClickListener(v -> {
-            Intent intent = new Intent(TipoDeRegistro.this, Login.class);
+            Intent intent = new Intent(TipoDeRegistro.this, Welcome.class);
             startActivity(intent);
             finish();
         });
