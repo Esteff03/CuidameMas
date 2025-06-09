@@ -21,10 +21,14 @@ public class ContactoAdapter extends RecyclerView.Adapter<ContactoAdapter.Contac
 
     private List<ContactoPreview> listaContactos;
     private Context context;
+    private String uuidActual;
+    private String usernameActual;
 
-    public ContactoAdapter(Context context, List<ContactoPreview> listaContactos) {
+    public ContactoAdapter(Context context, List<ContactoPreview> listaContactos, String uuidActual, String usernameActual) {
         this.context = context;
         this.listaContactos = listaContactos;
+        this.uuidActual = uuidActual;
+        this.usernameActual = usernameActual;
     }
 
     @NonNull
@@ -47,17 +51,18 @@ public class ContactoAdapter extends RecyclerView.Adapter<ContactoAdapter.Contac
             Log.d("ContactoAdapter", "Click en contacto: " + contacto.getNombreUsuario() + " (ID: " + contacto.getIdContacto() + ")");
 
             Intent intent = new Intent(context, ChatActivity.class);
-            intent.putExtra(Constants.EXTRA_ID_CONTACTO, contacto.getIdContacto());
-            intent.putExtra(Constants.EXTRA_NOMBRE_CONTACTO, contacto.getNombreUsuario());
+            intent.putExtra("UUID_ACTUAL", uuidActual); // ✅ USAR uuidActual aquí
+            intent.putExtra("UUID_DESTINATARIO", contacto.getIdContacto()); // ✅ Correcto
+            intent.putExtra("USERNAME_ACTUAL", usernameActual); // ✅ Nombre del usuario actual
 
-
-            // Solo usa FLAG_ACTIVITY_NEW_TASK si el contexto NO es una Activity
+            // Solo usa FLAG_ACTIVITY_NEW_TASK si el contexto no es una Activity
             if (!(context instanceof android.app.Activity)) {
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             }
 
             context.startActivity(intent);
         });
+
 
     }
 

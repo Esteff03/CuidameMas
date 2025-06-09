@@ -37,6 +37,7 @@ public class Contacto extends AppCompatActivity {
     private static final String SUPABASE_URL = "https://ieymwafslrvnvbneybgc.supabase.co";
     private static final String SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlleW13YWZzbHJ2bnZibmV5YmdjIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0NDcxNjgwMSwiZXhwIjoyMDYwMjkyODAxfQ.6O4seaPmMGH2hWm-ICUes5lVfNsKF8mWV0XVwY-9SYo";
     private ImageView nmensajes;
+    private String usernameActual = "Usuario";
 
     private BottomNavigationView botonNavigationView;
 
@@ -50,13 +51,19 @@ public class Contacto extends AppCompatActivity {
         recyclerMensaje = findViewById(R.id.recyclerViewChats);
         recyclerMensaje.setLayoutManager(new LinearLayoutManager(this));
 
-        listaContactos = new ArrayList<>();
-        adapter = new ContactoAdapter(this, listaContactos);
-        recyclerMensaje.setAdapter(adapter);
 
-        // Obtener user_id de SharedPreferences
+
         SharedPreferences prefs = getSharedPreferences("session", MODE_PRIVATE);
         String userId = prefs.getString("user_id", null);
+
+
+        listaContactos = new ArrayList<>();
+
+
+        // 2. Crear el adapter con los argumentos correctos
+        adapter = new ContactoAdapter(this, listaContactos, userId, usernameActual);
+        recyclerMensaje.setAdapter(adapter);
+
 
         if (userId != null) {
             // Cargar mensajes para ese usuario
@@ -137,6 +144,7 @@ public class Contacto extends AppCompatActivity {
 
                 int responseCode = conn.getResponseCode();
 
+                StringBuilder errorResponse = null;
                 if (responseCode == HttpURLConnection.HTTP_OK) {
                     InputStream is = conn.getInputStream();
                     Scanner scanner = new Scanner(is);
@@ -147,6 +155,10 @@ public class Contacto extends AppCompatActivity {
                     scanner.close();
 
                     JSONArray jsonArray = new JSONArray(response.toString());
+
+
+
+                    runOnUiThread(() -> Toast.makeText(this, "Error al cargar mensajes", Toast.LENGTH_SHORT).show());
 
                     // Filtrar por último mensaje por contacto (contact_id)
                     HashMap<String, ContactoPreview> contactoMap = new HashMap<>();
@@ -160,6 +172,18 @@ public class Contacto extends AppCompatActivity {
 
                         if (!contactoMap.containsKey(otroUsuarioId)) {
                             String nombreUsuario = obtenerNombreDesdeUsers(otroUsuarioId);
+
+                            if (usernameActual.equals("Usuario")) {
+                                usernameActual = obtenerNombreDesdeUsers(userId);
+
+                                // Guardamos en SharedPreferences
+                                SharedPreferences prefs = getSharedPreferences("session", MODE_PRIVATE);
+                                SharedPreferences.Editor editor = prefs.edit();
+                                editor.putString("username", usernameActual);
+                                editor.apply();
+                            }
+
+
                             String ultimoMensaje = mensaje.getString("content");
                             String hora = mensaje.getString("inserted_at");
                             int imagenPerfil = R.drawable.camara;
@@ -170,6 +194,7 @@ public class Contacto extends AppCompatActivity {
 
                             contactoMap.put(otroUsuarioId, contacto);
                         }
+                        Log.e("Supabase", "Error HTTP: " + responseCode);
                     }
 
                     listaContactos.clear();
@@ -188,7 +213,7 @@ public class Contacto extends AppCompatActivity {
 
                 } else {
                     Scanner scanner = new Scanner(conn.getErrorStream());
-                    StringBuilder errorResponse = new StringBuilder();
+                    errorResponse = new StringBuilder();
                     while (scanner.hasNext()) {
                         errorResponse.append(scanner.nextLine());
                     }
