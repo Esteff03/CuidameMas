@@ -70,6 +70,8 @@ public class PerfilPublico extends AppCompatActivity {
 
         //boton para atras
         imgAtras.setOnClickListener(v -> {
+            Intent intent = new Intent(PerfilPublico.this, Login.class);
+            startActivity(intent);
             finish();
         });
 
