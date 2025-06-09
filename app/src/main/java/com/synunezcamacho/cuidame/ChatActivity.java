@@ -1,5 +1,6 @@
 package com.synunezcamacho.cuidame;
 
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -28,7 +29,16 @@ public class ChatActivity extends AppCompatActivity {
 
     private ChatAdapter chatAdapter;
     private final List<Mensaje> mensajes = new ArrayList<>();
+    private final android.os.Handler handler = new android.os.Handler();
+    private final int INTERVALO_REFRESCO = 5000; // 5 segundos
 
+    private final Runnable refrescarChatRunnable = new Runnable() {
+        @Override
+        public void run() {
+            cargarMensajes();
+            handler.postDelayed(this, INTERVALO_REFRESCO);
+        }
+    };
     private String usuarioActualId;
     private String usuarioOtroId;
     private String usernameActual;
@@ -101,8 +111,10 @@ public class ChatActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(String json) {
                         try {
-                            mensajes.clear();
                             JSONArray array = new JSONArray(json);
+                            boolean hayNuevoMensaje = array.length() > mensajes.size();
+
+                            mensajes.clear();
                             for (int i = 0; i < array.length(); i++) {
                                 JSONObject obj = array.getJSONObject(i);
                                 Mensaje m = new Mensaje(
@@ -114,9 +126,15 @@ public class ChatActivity extends AppCompatActivity {
                                 );
                                 mensajes.add(m);
                             }
+
                             runOnUiThread(() -> {
                                 chatAdapter.notifyDataSetChanged();
                                 chatRecycler.scrollToPosition(mensajes.size() - 1);
+
+                                if (hayNuevoMensaje) {
+                                    reproducirSonido();
+                                    animarUltimoMensaje();
+                                }
                             });
                         } catch (Exception e) {
                             Log.e("ChatActivity", "Error parseando JSON mensajes", e);
@@ -131,4 +149,35 @@ public class ChatActivity extends AppCompatActivity {
                     }
                 });
     }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        handler.post(refrescarChatRunnable);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        handler.removeCallbacks(refrescarChatRunnable);
+    }
+
+private void reproducirSonido() {
+    MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.sonido_mensaje);
+    mediaPlayer.setOnCompletionListener(MediaPlayer::release);
+    mediaPlayer.start();
+}
+
+
+    private void animarUltimoMensaje() {
+        RecyclerView.ViewHolder viewHolder = chatRecycler.findViewHolderForAdapterPosition(mensajes.size() - 1);
+        if (viewHolder != null) {
+            viewHolder.itemView.setAlpha(0f);
+            viewHolder.itemView.animate().alpha(1f).setDuration(300).start();
+        }
+    }
+
+
+
 }

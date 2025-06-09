@@ -59,7 +59,7 @@ public class PerfilPublico extends AppCompatActivity {
         txtNombre = findViewById(R.id.txtNombre);
         txtFechaNacimiento = findViewById(R.id.txtFechaNacimiento);
         txtSexo = findViewById(R.id.txtSexo);
-        txtDireccion = findViewById(R.id.txtDireccion);
+
         txtSalario = findViewById(R.id.txtSalario);
         txtExperiencia = findViewById(R.id.txtExperiencia);
         txtReferencia = findViewById(R.id.txtReferencia);
@@ -167,7 +167,6 @@ public class PerfilPublico extends AppCompatActivity {
                     String direccion = datosUsuario != null ? datosUsuario.optString("direccion", "") : "";
 
                     txtNombre.setText(nombreCompleto);
-                    txtDireccion.setText("Dirección: " + direccion);
                     txtFechaNacimiento.setText("Fecha Nacimiento: " + formatearFechaDesdeBD(datosAdicionales.optString("fecha_nacimiento", "")));
                     txtSexo.setText("Sexo: " + datosAdicionales.optString("sexo", ""));
                     txtSalario.setText("Salario: " + datosAdicionales.optDouble("salario", 0));
