@@ -84,7 +84,6 @@ public class PerfilPublico extends AppCompatActivity {
         if (usuario != null) {
             txtFechaNacimiento.setText("Fecha Nacimiento: "+usuario.getFechaNacimiento());
             txtSexo.setText("Sexo: " + usuario.getGenero());
-            txtDireccion.setText("Direccion: " + usuario.getDireccion());
             txtSalario.setText("Salario: Desde "+ usuario.getSalarioDesde() + " Hasta "+ usuario.getSalarioHasta());
             txtExperiencia.setText("Experiencia: "+ usuario.getExperiencia());
             txtReferencia.setText("Referencias: " + usuario.getReferencias());
@@ -110,10 +109,7 @@ public class PerfilPublico extends AppCompatActivity {
             return false;
         });
 
-
-
         cargarPerfilDesdeSupabase();
-
     }
 
     private void cargarPerfilDesdeSupabase() {

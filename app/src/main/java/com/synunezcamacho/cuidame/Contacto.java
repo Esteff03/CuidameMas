@@ -218,9 +218,7 @@ public class Contacto extends AppCompatActivity {
                         errorResponse.append(scanner.nextLine());
                     }
                     scanner.close();
-                    Log.e("Supabase", "Error HTTP: " + responseCode);
-                    Log.e("Supabase", "Error response: " + errorResponse.toString());
-                    runOnUiThread(() -> Toast.makeText(this, "Error al cargar mensajes", Toast.LENGTH_SHORT).show());
+                    runOnUiThread(() -> Toast.makeText(this, "No tienes mensajes", Toast.LENGTH_SHORT).show());
                 }
             } catch (Exception e) {
                 e.printStackTrace();

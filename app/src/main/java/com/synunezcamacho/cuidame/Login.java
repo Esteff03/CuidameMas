@@ -1,6 +1,7 @@
 package com.synunezcamacho.cuidame;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -100,9 +101,16 @@ public class Login extends AppCompatActivity {
 
                     JSONObject response = new JSONObject(sb.toString());
                     String accessToken = response.getString("access_token");
+                    String refreshToken = response.getString("refresh_token");
+                    // Obtener el user_id del objeto "user"
+                    String userId = response.getJSONObject("user").getString("id");
 
-                    // Aquí podrías guardar el token si quieres persistir la sesión
-
+                    // Guardar en SharedPreferences
+                    SharedPreferences.Editor editor = getSharedPreferences("session", MODE_PRIVATE).edit();
+                    editor.putString("access_token", accessToken);
+                    editor.putString("refresh_token", refreshToken);
+                    editor.putString("user_id", userId);
+                    editor.apply();
                     resultado = "success";
                 } else if (code == 400) {
                     resultado = "invalid";
