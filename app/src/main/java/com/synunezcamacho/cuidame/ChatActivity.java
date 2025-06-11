@@ -102,7 +102,6 @@ public class ChatActivity extends AppCompatActivity {
         });
     }
 
-    // ✅ Método cargarMensajes correctamente definido fuera de onCreate()
     private void cargarMensajes() {
         SupabaseService.obtenerMensajesChat(
                 SUPABASE_URL, SUPABASE_API_KEY,

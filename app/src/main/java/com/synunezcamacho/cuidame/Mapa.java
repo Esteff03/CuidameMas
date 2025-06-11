@@ -383,7 +383,7 @@ public class Mapa extends AppCompatActivity implements OnMapReadyCallback {
 
                 String username = getSharedPreferences("session", MODE_PRIVATE).getString("username", null);
                 if (username != null) {
-                    intent.putExtra("USERNAME_ACTUAL", username);  // ✅
+                    intent.putExtra("USERNAME_ACTUAL", username);
                 } else {
                     Log.e("MAPA", "username no está disponible en SharedPreferences");
                 }

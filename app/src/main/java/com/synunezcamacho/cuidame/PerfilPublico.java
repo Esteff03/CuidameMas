@@ -38,13 +38,13 @@ public class PerfilPublico extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_perfil_publico);
 
         // la barra del toolbar
         toolbar = findViewById(R.id.miToolbar);
         setSupportActionBar(toolbar);
         getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.principal));
+
 
         //nav_menu
         botonNavigationView = findViewById(R.id.bottom_navigation);

@@ -58,42 +58,40 @@
         android:id="@+id/btnIniciarSesion"
         android:layout_width="173dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="32dp"
         android:background="@drawable/btn_ripple"
+        android:elevation="6dp"
+        android:fontFamily="@font/fredoka"
+        android:stateListAnimator="@null"
         android:text="@string/iniciarSesion"
         android:textColor="@color/negro"
         android:textSize="18sp"
-        android:fontFamily="@font/fredoka"
-        android:letterSpacing="0.05"
         android:textStyle="bold"
-        android:elevation="6dp"
-        android:stateListAnimator="@null"
-        android:translationZ="2dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.975" />
+        app:layout_constraintTop_toBottomOf="@+id/textView"
+        app:layout_constraintVertical_bias="0.846" />
 
     <Button
         android:id="@+id/btnRegistrarse"
-        android:layout_width="wrap_content"
+        android:layout_width="141dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
+        android:layout_marginStart="16dp"
         android:background="@drawable/btn_ripple"
+        android:elevation="6dp"
+        android:fontFamily="@font/fredoka"
+        android:stateListAnimator="@null"
         android:text="@string/registro"
         android:textColor="@color/negro"
         android:textSize="18sp"
-        android:fontFamily="@font/fredoka"
-        android:letterSpacing="0.05"
         android:textStyle="bold"
-        android:elevation="6dp"
-        android:stateListAnimator="@null"
-        android:translationZ="2dp"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btnIniciarSesion"
+        app:layout_constraintHorizontal_bias="0.507"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.975" />
-
+        app:layout_constraintTop_toBottomOf="@+id/textView"
+        app:layout_constraintVertical_bias="0.846" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -18,8 +18,7 @@ import android.view.View;
 
 public class TipoDeRegistro extends AppCompatActivity {
 
-
-    private Button botonCuidador, botonBuscoCuidador;
+    private Button botonCuidador, botonBuscoCuidador, botonRegistro;
     private String perfilSeleccionado = "";
     private ImageView imgAtras;
 
@@ -34,7 +33,7 @@ public class TipoDeRegistro extends AppCompatActivity {
 
         botonCuidador = findViewById(R.id.botonCuidador);
         botonBuscoCuidador = findViewById(R.id.botonBuscoCuidador);
-        Button botonRegistro = findViewById(R.id.botonRegistro);
+        botonRegistro = findViewById(R.id.botonRegistro);
 
         //Uso del Glide para aplicar el desenfoque
         Glide.with(this)

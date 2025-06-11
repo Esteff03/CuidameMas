@@ -81,6 +81,15 @@ public class Registro extends AppCompatActivity {
         usuario.setTelefono(edtTelefono.getText().toString());
 
         if (validaPerfil(usuario)) {
+            if (!validaNombreApellido(usuario.getNombre())) {
+                Toast.makeText(this, "Nombre no válido", Toast.LENGTH_SHORT).show();
+                return null;
+            }
+
+            if (!validaNombreApellido(usuario.getApellido())) {
+                Toast.makeText(this, "Apellido no válido", Toast.LENGTH_SHORT).show();
+                return null;
+            }
             if (!validaCorreo(usuario.getEmail())) {
                 verificarCampo(edtEmail, findViewById(R.id.asteriscoEmail), findViewById(R.id.invisibleCorreo));
                 Toast.makeText(this, "Correo no válido", Toast.LENGTH_SHORT).show();
@@ -90,6 +99,11 @@ public class Registro extends AppCompatActivity {
                 Toast.makeText(this, "Telefono no válido", Toast.LENGTH_SHORT).show();
                 return null;
             }
+            if (!validaDireccion(usuario.getDireccion())) {
+                Toast.makeText(this, "Dirección no válida", Toast.LENGTH_SHORT).show();
+                return null;
+            }
+
             return usuario;
         } else {
             verificarCampo(edtNombre, findViewById(R.id.asteriscoNombre), findViewById(R.id.invisibleNombre));
@@ -186,7 +200,6 @@ public class Registro extends AppCompatActivity {
                     return "Contraseña no válida.";
                 case "signup_rate_limit_exceeded":
                     return "Has alcanzado el límite de registros. Intenta más tarde.";
-
                 default:
                     return !msg.isEmpty() ? msg : "Error al crear cuenta.";
             }
@@ -233,6 +246,14 @@ public class Registro extends AppCompatActivity {
         }
         return false;
     }
+    // validacion
+    private boolean validaNombreApellido(String texto) {
+        return texto.matches("^[A-Za-zÁÉÍÓÚáéíóúÑñ\\s]{2,30}$");
+    }
+    private boolean validaDireccion(String direccion) {
+        return direccion.matches("^[\\wÁÉÍÓÚáéíóúÑñ0-9\\s,\\.\\-#]{5,60}$");
+    }
+
     private void guardarDatosUsuarioEnTabla(Usuario usuario, String perfilSeleccionado) {
         new Thread(() -> {
             try {
